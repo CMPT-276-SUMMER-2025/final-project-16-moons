@@ -1,1 +1,19 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=19676512&assignment_repo_type=AssignmentRepo)
+# 📁 Project Name
+
+> Recipedia
+
+---
+
+## 🧑‍🤝‍🧑 Project Members
+
+- **Alex Guo**
+- **Ajit Chauhan**
+- **Alan Palayoor Francis**
+- **Leeann D'Souza**
+
+---
+
+## 📄 Project Description
+
+Recipedia is a recipe generator that enables users to search for recipes while providing nutrition information for every meal. The app proposes a solution to two questions users ask: “What should I eat?” and “What’s the nutrition content of this meal?”. It aims to cut down on time spent trying to find meals that fit their nutrition goals and makes it easier to plan meals for the day. The app also gives users a variety of meals to choose from, based on certain preferences, such as ingredient or intolerances, to target a variety of dietary needs.
+
