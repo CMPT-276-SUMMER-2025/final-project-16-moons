@@ -1,6 +1,6 @@
 # 📁 Project Name
 
-> Recipedia
+**Recipedia**
 
 ---
 
