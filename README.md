@@ -1,19 +1,12 @@
-# 📁 Project Name
+# React + Vite
 
-**Recipedia**
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
----
+Currently, two official plugins are available:
 
-## 🧑‍🤝‍🧑 Project Members
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-- **Alex Guo**
-- **Ajit Chauhan**
-- **Alan Palayoor Francis**
-- **Leeann D'Souza**
+## Expanding the ESLint configuration
 
----
-
-## 📄 Project Description
-
-Recipedia is a recipe generator that enables users to search for recipes while providing nutrition information for every meal. The app proposes a solution to two questions users ask: “What should I eat?” and “What’s the nutrition content of this meal?”. It aims to cut down on time spent trying to find meals that fit their nutrition goals and makes it easier to plan meals for the day. The app also gives users a variety of meals to choose from, based on certain preferences, such as ingredient or intolerances, to target a variety of dietary needs.
-
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
