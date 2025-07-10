@@ -1,0 +1,33 @@
+
+name: CI - Recipedia App
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v3
+
+      - name: 🟢 Set Up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name:  Run Linter
+        run: npm run lint
+
+    #   - name:  Run Tests    not sure about it 
+    #     run: npm test
+
+      - name:  Build Project
+        run: npm run build
