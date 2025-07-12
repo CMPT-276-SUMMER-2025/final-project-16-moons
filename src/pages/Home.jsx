@@ -1,5 +1,7 @@
+import Section1 from '../components/Section1_Home'
+
 export default function Home() {
     return(
-        <h1>Home Page</h1>
+        <Section1 />
     );
 }
