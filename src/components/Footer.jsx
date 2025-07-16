@@ -1,5 +1,7 @@
 import { featuresLinks } from "../constants";
 import { aboutUsLinks } from "../constants";
+import logo from '../assets/icons/recipe-book.png';
+
 
 export default function Footer() {
     return(
@@ -9,7 +11,7 @@ export default function Footer() {
                     <div className="grid lg:grid-cols-2 gap-3">
                         {/* logo column */}
                         <div className="flex items-center space-x-5 pl-120">
-                            <img src="src/assets/recipedialogo.png" alt="Recipedia Logo" className="w-13 h-13"/>
+                            <img src={logo} alt="Recipedia Logo" className="w-13 h-13"/>
                             <span className="text-4xl text-base-content">Recipedia</span>
                         </div>
                         
