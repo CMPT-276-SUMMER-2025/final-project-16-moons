@@ -1,5 +1,35 @@
+import { featuresLinks } from "../constants";
+import { aboutUsLinks } from "../constants";
+
 export default function Footer() {
     return(
-        <h1>Footer</h1>
+        <footer className="mt-20 bg-base-100 text-secondary-content py-5">
+            {/* logo column */}
+            
+            
+            {/* Two footer links columns */}
+            <div className="grid lg:grid-cols-2 gap-5">
+                <div>
+                    <h2 className="text-lg text-base-content font-semibold mb-2">Features</h2>
+                    <ul className="space-y-1">
+                        {featuresLinks.map((link, index) => (
+                            <li key={index}>
+                                <a className="text-md text-secondary-content hover:text-base-content underline" href={link.href}>{link.text}</a>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div>
+                    <h2 className="text-lg text-base-content font-semibold mb-2">About Us</h2>
+                    <ul className="space-y-1">
+                        {aboutUsLinks.map((link, index) => (
+                            <li key={index}>
+                                <a className="text-md text-secondary-content hover:text-base-content underline" href={link.href}>{link.text}</a>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </div>
+        </footer>
     );
 }
