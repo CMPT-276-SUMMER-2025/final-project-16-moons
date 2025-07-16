@@ -1,9 +1,10 @@
-import Section1 from '../components/Section1_Home'
 
+import Navbar from '../components/Navbar';
 export default function Home() {
     return(
-        <div>
-            <Section1 />
-        </div>
+        <>
+        <Navbar/>
+      <Section1 />
+        </>
     );
 }
