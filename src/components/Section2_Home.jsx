@@ -16,16 +16,19 @@ function Section2_Home() {
         image='src\assets\icons\search-interface-symbol.png'
         title='Recipe Search'
         content= 'Search for recipes by name, main ingredient, area, or category!'
+        link="#/search"
         />
         <WhatWeOfferCards
         image='src\assets\icons\Scanner.png'
         title='Nutrition Scanner'
         content= 'Get the nutrition facts of menus, recipes, or food journals by uploading an image!'
+        link="#/scanner"
         />
         <WhatWeOfferCards
         image='src\assets\icons\indecisive.png'
         title='Feeling Indecisive?'
         content= 'Randomly generate amazing recipes for breakfast, lunch, and dinner!'
+        link="#/indecisive"
         />
         </div>
 

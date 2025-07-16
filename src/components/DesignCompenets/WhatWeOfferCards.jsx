@@ -15,11 +15,12 @@ function WhatWeOfferCards(props) {
         {props.content}
       </p>
 
-      <button
+      <a
+        href={props.link}
         className="bg-[#DE6B48] text-white text-xl py-2 px-8 rounded-full hover:bg-[#c75c3c] transition "
       >
         Check it out!
-      </button>
+      </a>
     </div>
   );
 }
