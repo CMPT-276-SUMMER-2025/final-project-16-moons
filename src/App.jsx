@@ -5,11 +5,14 @@ import Scanner from './pages/Scanner';
 import Indecisive from './pages/Indecisive';
 import Contact from './pages/Contact';
 import Footer from './components/Footer';
+import Navbar from './components/Navbar';
+
 import './App.css';
 
 function App() {
   return (
     <HashRouter>
+      <Navbar />
       <Routes>
         <Route exact path ="/" element={<Home />} />
         <Route path ="/search" element={<Search />} />
