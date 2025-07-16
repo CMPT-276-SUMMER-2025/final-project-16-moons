@@ -1,11 +1,11 @@
 import meat from '../../assets/icons/meat.png'
 import carrot from '../../assets/icons/carrot.png'
 import apple from '../../assets/icons/apple.png'
-import lines from '../../assets/lines.png'
+import lines from '../../assets/images/linesVertical.png'
 
 export default function Vertical1() {
     return(
-        <div className="h-full flex flex-col items-center justify-center space-y-15 p-4">
+        <div className="flex flex-col items-center justify-center space-y-15 px-4">
             <img src={meat} className="h-15 w-15" alt="Orange icon of a pear-shaped piece meat with a circle as a bone in the middle. Only the outline of the icon is orange, the icon's shape isn't filled."/>
             <img src={carrot} className="h-15 w-15" alt="Orange icon of a carrot with 4 ridges and 6 leaves. Only the outline of the icon is orange, the icon's shape isn't filled."/>
             <img src={apple} className="h-15 w-15" alt="Orange icon of an apple with a highlight mark near the top left, 1 leaf and 1 stem. Only the outline of the icon is orange, the icon's shape isn't filled."/>

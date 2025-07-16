@@ -4,8 +4,8 @@ import arrow from '../assets/icons/down-arrow.png'
 
 export default function Section1_Home() {
     return(
-        <section id="section1" className="grid grid-cols-5 p-15 min-w-svh min-h-screen">
-            <div className="flex">
+        <section id="section1" className="grid grid-cols-5 px-15 min-w-svh min-h-screen">
+            <div className="flex mb-20">
                 <VerticalDesign1 />
             </div>
             <div className="flex flex-col col-span-3 mt-50 text-center">
@@ -16,12 +16,12 @@ export default function Section1_Home() {
                     onClick={() => {
                         document.getElementById('section2')?.scrollIntoView({ behavior: 'smooth' });
                     }}
-                    className="mt-20 w-fit self-center btn btn-secondary hover:btn-primary rounded-full shadow-2xl"
+                    className="mt-20 w-fit self-center btn btn-primary rounded-full shadow-2xl"
                     >
                     <img className="h-8 w-8" src={arrow} alt="Black icon of a downwards pointing greater than symbol." />
                 </button>
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-end mb-20">
                 <VerticalDesign2 />
             </div>
         </section>
