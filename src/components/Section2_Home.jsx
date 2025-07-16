@@ -11,7 +11,7 @@ import lines from '../assets/images/linesHorizontal.png'
 function Section2_Home() {
   return (
     <>
-    <section id="section2" className="grid p-15 min-w-svh min-h-screen bg-[#EDE9E9]">
+    <section id="section2" className="grid p-15 min-w-svh">
         <div>
           <div className="flex flex-col mt-20 text-center mb-10">
               <h1 className="text-7xl">What We Offer</h1>

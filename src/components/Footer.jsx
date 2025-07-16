@@ -13,9 +13,9 @@ export default function Footer() {
                         {/* logo column */}
                         <div className="flex items-center space-x-5 pl-120">
                             <Link to="/">
-                                <img src={logo} alt="Recipedia Logo" className="w-13 h-13"/>
+                                <img src={logo} alt="Recipedia Logo" className="w-13 h-13 transition duration-300 hover:scale-110"/>
                             </Link>
-                            <Link to="/" className="text-4xl text-base-content">Recipedia</Link>
+                            <Link to="/" className="text-4xl text-base-content transition duration-300 hover:scale-110">Recipedia</Link>
                         </div>
 
                         {/* Two footer links columns */}

@@ -17,7 +17,7 @@ function WhatWeOfferCards(props) {
 
       <a
         href={props.link}
-        className="bg-[#DE6B48] text-white text-xl py-2 px-8 rounded-full hover:bg-[#c75c3c] transition "
+        className="btn btn-primary text-lg py-2 px-8 rounded-full transition duration-300 hover:scale-110"
       >
         Check it out!
       </a>
