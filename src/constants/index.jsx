@@ -2,13 +2,13 @@
 
 {/* Links for footer */}
 export const featuresLinks = [
-    { href: "#", text: "Recipe Search"},
-    { href: "#", text: "Nutrition Scanner"},
-    { href: "#", text: "Feeling Indecisive"},
+    { href: "#/search", text: "Recipe Search"},
+    { href: "#/scanner", text: "Nutrition Scanner"},
+    { href: "#/indecisive", text: "Feeling Indecisive"},
 ];
 
 export const aboutUsLinks = [
-    { href: "#", text: "Contact"},
+    { href: "#/contact", text: "Contact"},
     { href: "#", text: "Recipedia"},
     { href: "#", text: "The Team"},
 ];

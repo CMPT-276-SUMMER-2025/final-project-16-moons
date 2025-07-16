@@ -1,5 +1,6 @@
 import { featuresLinks } from "../constants";
 import { aboutUsLinks } from "../constants";
+import {Link} from 'react-router-dom';
 import logo from '../assets/icons/recipe-book.png';
 
 
@@ -11,10 +12,12 @@ export default function Footer() {
                     <div className="grid lg:grid-cols-2 gap-3">
                         {/* logo column */}
                         <div className="flex items-center space-x-5 pl-120">
-                            <img src={logo} alt="Recipedia Logo" className="w-13 h-13"/>
-                            <span className="text-4xl text-base-content">Recipedia</span>
+                            <Link to="/">
+                                <img src={logo} alt="Recipedia Logo" className="w-13 h-13"/>
+                            </Link>
+                            <Link to="/" className="text-4xl text-base-content">Recipedia</Link>
                         </div>
-                        
+
                         {/* Two footer links columns */}
                         <div className="grid lg:grid-cols-2 pr-80">
                             <div>
@@ -46,7 +49,7 @@ export default function Footer() {
                     </p>
                 </div>
             </div>
-            
+
         </footer>
     );
 }

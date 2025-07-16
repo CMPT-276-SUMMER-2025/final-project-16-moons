@@ -7,10 +7,12 @@ function Navbar(){
     <>
         <nav className="navbar shadow-md px-19 mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6"
         style={{ backgroundColor: '#DE6B48' }}>
-           <div className="flex-1 flex items-center gap-2">
-            <img src={logo} alt="logo" className="h-8 w-8" />
+            <div className="flex-1 flex items-center gap-2">
+                <Link to="/">
+                    <img src={logo} alt="logo" className="h-8 w-8" />
+                </Link>
                 <Link to="/" className="text-white text-lg">
-                Recipedia
+                    Recipedia
                 </Link>
             </div>
 
