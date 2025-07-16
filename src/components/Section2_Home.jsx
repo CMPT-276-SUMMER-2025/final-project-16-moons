@@ -7,35 +7,34 @@ import apple from '../assets/icons/apple.png'
 import carrot from '../assets/icons/carrot.png'
 import meat from '../assets/icons/meat.png'
 import lines from '../assets/images/linesHorizontal.png'
+import arrow from '../assets/icons/down-arrow.png'
 
 function Section2_Home() {
   return (
     <>
     <section id="section2" className="grid p-15 min-w-svh">
-        <div>
-          <div className="flex flex-col mt-20 text-center mb-10">
-              <h1 className="text-7xl">What We Offer</h1>
-          </div>
+        <div className="flex flex-col text-center mb-10">
+            <h1 className="text-7xl">What We Offer</h1>
         </div>
-        <div className='grid sm:grid-cols-3 grid-col-1 gap-10 sm:ml-5 sm:mr-5 h-[300px]'>
-        <WhatWeOfferCards
-        image={search}
-        title='Recipe Search'
-        content= 'Search for recipes by name, main ingredient, area, or category!'
-        link="#/search"
-        />
-        <WhatWeOfferCards
-        image={scanner}
-        title='Nutrition Scanner'
-        content= 'Get the nutrition facts of menus, recipes, or food journals by uploading an image!'
-        link="#/scanner"
-        />
-        <WhatWeOfferCards
-        image={indecisive}
-        title='Feeling Indecisive?'
-        content= 'Randomly generate amazing recipes for breakfast, lunch, and dinner!'
-        link="#/indecisive"
-        />
+        <div className='mt-10 grid sm:grid-cols-3 grid-col-1 gap-10 sm:ml-5 sm:mr-5 h-[280px]'>
+          <WhatWeOfferCards
+          image={search}
+          title='Recipe Search'
+          content= 'Search for recipes by name, main ingredient, area, or category!'
+          link="#/search"
+          />
+          <WhatWeOfferCards
+          image={scanner}
+          title='Nutrition Scanner'
+          content= 'Get the nutrition facts of menus, recipes, or food journals by uploading an image!'
+          link="#/scanner"
+          />
+          <WhatWeOfferCards
+          image={indecisive}
+          title='Feeling Indecisive?'
+          content= 'Randomly generate amazing recipes for breakfast, lunch, and dinner!'
+          link="#/indecisive"
+          />
         </div>
 
         <div>
@@ -45,10 +44,30 @@ function Section2_Home() {
             <img src={meat} alt="apple" />
           </div>
           <div className='flex justify-center mt-5'>
-            <img src={lines} alt="lines" className='w-175' />
+            <img src={lines} alt="lines" className='w-160' />
           </div>
         </div>
 
+      <div className="flex justify-center mt-20 gap-5">
+        {/* <button
+          onClick={() => {
+              document.getElementById('section3')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          className="tooltip w-fit btn btn-primary rounded-full shadow-2xl transition duration-300 hover:scale-110"
+          data-tip="Scroll down the page!"
+          >
+          <img className="h-8 w-8" src={arrow} alt="Black icon of an upwards pointing greater than symbol." />
+        </button> */}
+        <button
+          onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          className="tooltip w-fit btn btn-primary rounded-full shadow-2xl transition duration-300 hover:scale-110"
+          data-tip="Scroll up the page!"
+          >
+          <img className="h-8 w-8 rotate-180" src={arrow} alt="Black icon of an upwards pointing greater than symbol." />
+        </button>
+      </div>
     </section>
     </>
   )

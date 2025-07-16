@@ -16,7 +16,8 @@ export default function Section1_Home() {
                     onClick={() => {
                         document.getElementById('section2')?.scrollIntoView({ behavior: 'smooth' });
                     }}
-                    className="mt-20 w-fit self-center btn btn-primary rounded-full shadow-2xl transition duration-300 hover:scale-110"
+                    className="tooltip mt-20 w-fit self-center btn btn-primary rounded-full shadow-2xl transition duration-300 hover:scale-110"
+                    data-tip="Scroll down the page!"
                     >
                     <img className="h-8 w-8" src={arrow} alt="Black icon of a downwards pointing greater than symbol." />
                 </button>
