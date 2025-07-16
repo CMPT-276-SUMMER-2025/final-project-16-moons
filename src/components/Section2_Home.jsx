@@ -6,7 +6,7 @@ function Section2_Home() {
     <>
     <section id="section2" className="grid p-15 min-w-svh min-h-screen bg-[#EDE9E9]">
         <div>
-        <div className="flex flex-col mt-20 text-center">
+        <div className="flex flex-col mt-20 text-center mb-10">
              <h1 className="text-7xl">What We Offer</h1>
         </div>
         </div>
@@ -35,7 +35,7 @@ function Section2_Home() {
             <img src="src\assets\meat.png" alt="apple" />
           </div>
           <div className='flex justify-center mt-5'>
-            <img src="src\assets\lines.png" alt="lines" className='w-175' />
+            <img src="src\assets\linesHorizontal.png" alt="lines" className='w-175' />
           </div>
         </div>
 
