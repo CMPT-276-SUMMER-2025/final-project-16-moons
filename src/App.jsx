@@ -4,7 +4,9 @@ import Search from './pages/Search';
 import Scanner from './pages/Scanner';
 import Indecisive from './pages/Indecisive';
 import Contact from './pages/Contact';
+import Footer from './components/Footer';
 import Navbar from './components/Navbar';
+
 import './App.css';
 
 function App() {
@@ -18,6 +20,7 @@ function App() {
         <Route path ="/indecisive" element={<Indecisive />} />
         <Route path ="/contact" element={<Contact />} />
       </Routes>
+      <Footer />
     </HashRouter>
   );
 }
