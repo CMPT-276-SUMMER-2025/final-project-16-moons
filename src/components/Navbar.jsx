@@ -7,7 +7,7 @@ function Navbar(){
 
     return (
     <>
-        <nav className="navbar shadow-md px-19 mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6"
+        <nav className="navbar shadow-md px-19 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6"
         style={{ backgroundColor: '#DE6B48' }}>
             <div className="flex-1 flex items-center gap-2">
                 <Link to="/">

@@ -1,5 +1,7 @@
 export default function Search() {
     return(
-        <h1>Search Page</h1>
+        <div className="flex items-center justify-center h-200">
+            <h1 className="text-7xl">Search Page</h1>
+        </div>
     );
 }
