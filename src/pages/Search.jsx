@@ -28,7 +28,7 @@ function SearchCategory(){
                 <button
                     onClick={() => setSearchType("area")}
                     className={`${searchType === "area" ? "bg-[#DE6B48]" : "bg-[#C0BABA]"}
-                                hover:bg-[#DE6B48] text-white py-2 px-5 rounded-full transition-all tooltip`}
+                                hover:bg-[#DE6B48] text-white py-2 px-5 rounded-full transition-all tooltip duration-300 hover:scale-110`}
                     data-tip="E.g.: 'Canada' or 'Mexico'"
                 >
                         Area
@@ -36,7 +36,7 @@ function SearchCategory(){
                 <button
                     onClick={() => setSearchType("name")}
                     className={`${searchType === "name" ? "bg-[#DE6B48]" : "bg-[#C0BABA]"}
-                                hover:bg-[#DE6B48] text-white px-4 rounded-full transition-all tooltip`}
+                                hover:bg-[#DE6B48] text-white px-4 rounded-full transition-all tooltip duration-300 hover:scale-110`}
                     data-tip="E.g.: 'Spaghetti' or 'Pizza'"
                     >
                         Name
@@ -44,7 +44,7 @@ function SearchCategory(){
                 <button
                     onClick={() => setSearchType("category")}
                     className={`${searchType === "category" ? "bg-[#DE6B48]" : "bg-[#C0BABA]"}
-                                hover:bg-[#DE6B48] text-white px-4 rounded-full transition-all tooltip`}
+                                hover:bg-[#DE6B48] text-white px-4 rounded-full transition-all tooltip duration-300 hover:scale-110`}
                     data-tip="E.g.: 'Seafood' or 'Spicy'"
 
                     >
@@ -53,7 +53,7 @@ function SearchCategory(){
                 <button
                     onClick={() => setSearchType("ingredient")}
                     className={`${searchType === "ingredient" ? "bg-[#DE6B48]" : "bg-[#C0BABA]"}
-                                hover:bg-[#DE6B48] text-white px-4 rounded-full transition-all tooltip`}
+                                hover:bg-[#DE6B48] text-white px-4 rounded-full transition-all tooltip duration-300 hover:scale-110`}
                     data-tip="E.g.: 'Chicken' or 'Onion'"
                     >
                         Main Ingredient
@@ -62,13 +62,13 @@ function SearchCategory(){
             <div className="relative flex items-center gap-2 w-full">
                 <button
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#C0BABA] hover:text-[#C0BABA]">
-                    <i className="fas fa-search text-[#C0BABA] hover:text-[#DE6B48]"></i>
+                    <i className="fas fa-search text-[#C0BABA] hover:text-[#DE6B48] duration-300 hover:scale-120"></i>
                 </button>
                 <input
                 type = "text"
                 placeholder = {placeholderText[searchType]}
                 value = {inputText}
-                onChange = {(e) => setInput(e.target.value)}
+                onChange = {(e) => setInputText(e.target.value)}
                 className = "bg-white shadow-xl h-10 px-10 rounded-full text-sm w-full focus:outline-none focus:ring-2 focus:ring-[#C0BABA]">
                 </input>
             </div>
@@ -76,6 +76,7 @@ function SearchCategory(){
     );
 
 }
+
 export default function Search() {
     const recipes = [
         'Spaghetti & Meatballs',
@@ -89,6 +90,35 @@ export default function Search() {
         'American Style Burger & Fries',
         'Hello World'
     ]
+
+    useEffect(() => {
+        const query = 'pie'
+
+        /* fetch(`https://api.api-ninjas.com/v1/recipe?query=${encodeURIComponent(query)}`, {
+            method: 'GET',
+            headers: {
+                'X-Api-Key': 'etG02WI3p6sIOjDznbMQ0w==8x3EZ5mV0FRbhlj6',
+                'Content-Type': 'application/json'
+            }
+        }) */
+
+        fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(query)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`)
+                }
+
+                return response.json()
+            })
+
+            .then(data => {
+                console.log(data)
+            })
+
+            .catch(error => {
+                console.error('Error: ', error.message)
+            })
+    }, [])
 
     return(
         <div className="flex flex-row justify-between px-19 py-10 h-200">
@@ -109,7 +139,7 @@ export default function Search() {
             </div>
             <div className="flex flex-col w-[45%] gap-6">
                 <SearchCategory/>
-                <div className="bg-white p-6 rounded-xl border-gray-400 shadow-2xl max-h-full space-y-5 overflow-y-auto">
+                <div className="bg-white p-6 rounded-xl shadow-2xl max-h-full space-y-5 overflow-y-auto">
                     {recipes.map((recipe, idx) => (
                         <SearchResult key={idx} number={idx+1} name={recipe} />
                     ))}
