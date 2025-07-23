@@ -6,7 +6,7 @@ import lines from '../assets/images/linesHorizontal.png'
 import SearchResult from '../components/SearchResult'
 
 
-function SearchCategory(){
+function SearchCategory({ onSearch }){
     const [searchType, setSearchType] = useState("");
     const [inputText, setInputText] = useState("");
 
@@ -17,6 +17,18 @@ function SearchCategory(){
         category: "Search by category...",
         initial: "Pick an option above to start searching!"
     };
+
+    const handleSearch = () => {
+        if (inputText.trim() && searchType !== "initial") {
+            onSearch(searchType, inputText.trim())
+        }
+    }
+
+    const handleKeyPress = (e) => {
+        if (e.key === "Enter") {
+            handleSearch()
+        }
+    }
 
     useEffect(() => {
         setSearchType("initial");
@@ -61,6 +73,7 @@ function SearchCategory(){
             </div>
             <div className="relative flex items-center gap-2 w-full">
                 <button
+                onClick={() => handleSearch()}
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#C0BABA] hover:text-[#C0BABA]">
                     <i className="fas fa-search text-[#C0BABA] hover:text-[#DE6B48] duration-300 hover:scale-120"></i>
                 </button>
@@ -69,6 +82,8 @@ function SearchCategory(){
                 placeholder = {placeholderText[searchType]}
                 value = {inputText}
                 onChange = {(e) => setInputText(e.target.value)}
+                onKeyDown={handleKeyPress}
+                disabled={searchType === "initial"}
                 className = "bg-white shadow-xl h-10 px-10 rounded-full text-sm w-full focus:outline-none focus:ring-2 focus:ring-[#C0BABA]">
                 </input>
             </div>
@@ -78,47 +93,92 @@ function SearchCategory(){
 }
 
 export default function Search() {
-    const recipes = [
-        'Spaghetti & Meatballs',
-        'Lemon Shrimp Risotto',
-        'American Style Burger & Fries',
-        'Spaghetti & Meatballs',
-        'Lemon Shrimp Risotto',
-        'American Style Burger & Fries',
-        'Spaghetti & Meatballs',
-        'Lemon Shrimp Risotto',
-        'American Style Burger & Fries',
-        'Hello World'
-    ]
+    const [recipes, setRecipes] = useState([])
+    const [error, setError] = useState(null)
 
-    useEffect(() => {
-        const query = 'pie'
+    const getApiUrl = (searchType, query) => {
+        const baseURL = 'https://www.themealdb.com/api/json/v1/1'
+        const encodedQuery = encodeURIComponent(query)
 
-        /* fetch(`https://api.api-ninjas.com/v1/recipe?query=${encodeURIComponent(query)}`, {
-            method: 'GET',
-            headers: {
-                'X-Api-Key': 'etG02WI3p6sIOjDznbMQ0w==8x3EZ5mV0FRbhlj6',
-                'Content-Type': 'application/json'
+        switch (searchType) {
+            case 'name':
+                return `${baseURL}/search.php?s=${encodedQuery}`
+            case 'ingredient':
+                return `${baseURL}/search.php?i=${encodedQuery}`
+            case 'area':
+                return `${baseURL}/search.php?a=${encodedQuery}`
+            case 'category':
+                return `${baseURL}/search.php?c=${encodedQuery}`
+            default:
+                return null
+        }
+    }
+
+    const formatRecipes = (data) => {
+        if (!data || !data.meals) {
+            return []
+        }
+
+        return data.meals.map(meal => ({
+            id: meal.idMeal,
+            name: meal.strMeal,
+            category: meal.strCategory,
+            area: meal.strArea,
+            image: meal.strMealThumb,
+            instructions: meal.strInstructions,
+            ingredients: meal.strIngredient1 ? extractIngredients(meal) : null
+        }))
+    }
+
+    const extractIngredients = (meal) => {
+        const ingredients = []
+
+        for (let i = 1; i <= 20; i++) {
+            const ingredient = meal[`strIngredient${i}`]
+            const measure = meal[`strMeasure${i}`]
+
+            if (ingredient && ingredient.trim()) {
+                ingredients.push({
+                    name: ingredient.trim(),
+                    measure: measure ? measure.trim() : ''
+                })
             }
-        }) */
+        }
 
-        fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(query)}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.status}`)
-                }
+        return ingredients
+    }
 
-                return response.json()
-            })
+    const handleSearch = async (searchType, query) => {
+        setError(null);
 
-            .then(data => {
-                console.log(data)
-            })
+        try {
+            const apiUrl = getApiUrl(searchType, query);
 
-            .catch(error => {
-                console.error('Error: ', error.message)
-            })
-    }, [])
+            if (!apiUrl) {
+                throw new Error('Invalid search type');
+            }
+
+            const response = await fetch(apiUrl);
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            const formattedRecipes = formatRecipes(data);
+
+            setRecipes(formattedRecipes);
+
+            if (formattedRecipes.length === 0) {
+                setError('No recipes found. Try a different search term.');
+            }
+
+        } catch (error) {
+            console.error('Search error:', error.message);
+            setError('Failed to fetch recipes. Please try again.');
+            setRecipes([]);
+        }
+    }
 
     return(
         <div className="flex flex-row justify-between px-19 py-10 h-200">
@@ -138,10 +198,16 @@ export default function Search() {
                 </div>
             </div>
             <div className="flex flex-col w-[45%] gap-6">
-                <SearchCategory/>
+                <SearchCategory onSearch={handleSearch}/>
                 <div className="bg-white p-6 rounded-xl shadow-2xl max-h-full space-y-5 overflow-y-auto">
+                    {error && (
+                        <div className="text-center text-red-500 py-4">
+                            {error}
+                        </div>
+                    )}
+
                     {recipes.map((recipe, idx) => (
-                        <SearchResult key={idx} number={idx+1} name={recipe} />
+                        <SearchResult key={recipe.id || idx} number={idx + 1} name={recipe.name} recipe={recipe} />
                     ))}
                 </div>
             </div>
