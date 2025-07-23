@@ -2,7 +2,7 @@ import React from 'react';
 
 function WhatWeOfferCards(props) {
   return (
-    <div className="bg-[#EDE9E9] p-6 rounded-xl border-gray-400 shadow-2xl text-center">
+    <div className="bg-white p-6 rounded-xl border-gray-400 shadow-2xl text-center">
 
       <div className="flex justify-center mb-4">
         <img src={props.image} alt="icon" className="w-8 h-8" />

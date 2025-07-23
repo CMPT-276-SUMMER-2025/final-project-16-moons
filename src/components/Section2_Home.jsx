@@ -1,5 +1,5 @@
 import React from 'react'
-import WhatWeOfferCards from './DesignCompenets/WhatWeOfferCards'
+import WhatWeOfferCards from './WhatWeOfferCards'
 import search from '../assets/icons/search-interface-symbol.png'
 import scanner from '../assets/icons/Scanner.png'
 import indecisive from '../assets/icons/indecisive.png'
@@ -20,7 +20,7 @@ function Section2_Home() {
           <WhatWeOfferCards
           image={search}
           title='Recipe Search'
-          content= 'Search for recipes by name, main ingredient, area, or category!'
+          content= 'Search for recipes by area, name, category, or main ingredient!'
           link="#/search"
           />
           <WhatWeOfferCards
@@ -39,25 +39,16 @@ function Section2_Home() {
 
         <div>
           <div className='flex justify-center mt-20 gap-8'>
-            <img src={apple} alt="apple" />
-            <img src={carrot} alt="apple" />
-            <img src={meat} alt="apple" />
+            <img className="h-15 w-15" src={meat} alt="apple" />
+            <img className="h-15 w-15" src={carrot} alt="apple" />
+            <img className="h-15 w-15" src={apple} alt="apple" />
           </div>
           <div className='flex justify-center mt-5'>
-            <img src={lines} alt="lines" className='w-160' />
+            <img src={lines} alt="lines" className='w-130' />
           </div>
         </div>
 
       <div className="flex justify-center mt-20 gap-5">
-        {/* <button
-          onClick={() => {
-              document.getElementById('section3')?.scrollIntoView({ behavior: 'smooth' });
-          }}
-          className="tooltip w-fit btn btn-primary rounded-full shadow-2xl transition duration-300 hover:scale-110"
-          data-tip="Scroll down the page!"
-          >
-          <img className="h-8 w-8" src={arrow} alt="Black icon of an upwards pointing greater than symbol." />
-        </button> */}
         <button
           onClick={() => {
               window.scrollTo({ top: 0, behavior: 'smooth' });
