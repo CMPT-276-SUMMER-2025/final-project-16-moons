@@ -1,5 +1,6 @@
-export default function SearchResult({ number, name, image, recipeData }) {
-    const recipe = recipeData
+export default function SearchResult({ number, name, image /*, recipeData <--- uncomment this */}) {
+    // The line below contains the actual recipe information, like picture, ingredients, and instructions.
+    // const recipe = recipeData
 
     return(
         <div className="bg-base-200 p-6 rounded-xl hover:bg-primary hover:text-white transition duration-300 hover:scale-102">
