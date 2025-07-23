@@ -1,5 +1,5 @@
 import React from 'react'
-import WhatWeOfferCards from './DesignCompenets/WhatWeOfferCards'
+import WhatWeOfferCards from './WhatWeOfferCards'
 import search from '../assets/icons/search-interface-symbol.png'
 import scanner from '../assets/icons/Scanner.png'
 import indecisive from '../assets/icons/indecisive.png'

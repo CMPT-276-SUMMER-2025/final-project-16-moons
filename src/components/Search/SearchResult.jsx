@@ -1,4 +1,6 @@
-export default function SearchResult({ number, name, image, recipe }) {
+export default function SearchResult({ number, name, image, recipeData }) {
+    const recipe = recipeData
+
     return(
         <div className="bg-base-200 p-6 rounded-xl hover:bg-primary hover:text-white transition duration-300 hover:scale-102">
             <div className="flex flex-row justify-between">
