@@ -189,7 +189,7 @@ export default function Search() {
                     )}
 
                     {recipes.map((recipe, idx) => (
-                        <SearchResult key={idx} number={idx + 1} name={recipe.name} image={recipe.image} /* recipeData={recipe} <--- uncomment this */ />
+                        <SearchResult key={idx} number={idx + 1} name={recipe.name} image={recipe.image}  recipeData={recipe}  />
                     ))}
 
                     {loading && (
