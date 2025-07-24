@@ -203,15 +203,7 @@ export default function Search() {
 
                         <SearchResult key={idx} number={idx + 1} name={recipe.name} image={recipe.image}  recipeData={recipe}  />
 
-                        <SearchResult
-                            key={idx}
-                            number={idx + 1}
-                            name={recipe.name}
-                            image={recipe.image}
-                            area={recipe.area}
-                            category={recipe.category}
-                             recipeData={recipe} 
-                        />
+                    
 
                     ))}
 
