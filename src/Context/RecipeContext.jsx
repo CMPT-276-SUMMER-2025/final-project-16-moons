@@ -1,6 +1,6 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState } from 'react';
 
-const RecipeContext = createContext();
+export const RecipeContext = createContext();
 
 export const RecipeProvider = ({ children }) => {
     const [selectedRecipe, setSelectedRecipe] = useState(null);
@@ -11,5 +11,3 @@ export const RecipeProvider = ({ children }) => {
         </RecipeContext.Provider>
     );
 };
-
-export const useRecipe = () => useContext(RecipeContext);

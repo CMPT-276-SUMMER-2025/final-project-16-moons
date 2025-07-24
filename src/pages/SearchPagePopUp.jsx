@@ -1,8 +1,8 @@
-import { useRecipe } from "../Context/RecipeContext";
+import useRecipe from "../Hooks/UseRecipe";
 
 export default function RecipeDetail() {
+    console.log('HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH')
     const { selectedRecipe } = useRecipe();
-
     if (!selectedRecipe) {
         return (
             <div className="p-6">

@@ -1,4 +1,4 @@
-import { useRecipe } from "../../Context/RecipeContext";
+import useRecipe from '../../Hooks/UseRecipe.js';
 import { useNavigate } from 'react-router-dom';
 
 export default function SearchResult({ number, name, image, area, category, recipeData }) {
@@ -7,7 +7,7 @@ export default function SearchResult({ number, name, image, area, category, reci
 
     const handleClick = () => {
         setSelectedRecipe(recipeData);
-        navigate('/recipe');
+        navigate("/search/recipe");
     };
 
     return (
