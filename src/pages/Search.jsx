@@ -34,8 +34,8 @@ export default function Search() {
         }
     }
 
-    // Extract and format the ingredients from the JSON data of one recipe
-    const extractIngredients = (meal) => {
+    // Format the ingredients from the JSON data of one recipe
+    const formatIngredients = (meal) => {
         const ingredients = []
 
         for (let i = 1; i <= 20; i++) {
@@ -60,16 +60,17 @@ export default function Search() {
         }
 
         return data.meals.map(meal => ({
-            id: meal.idMeal,
             name: meal.strMeal,
             image: meal.strMealThumb,
+            category: meal.strCategory || 'Unavailable',
+            area: meal.strArea || 'Unavailable',
             instructions: meal.strInstructions,
-            ingredients: extractIngredients(meal)
+            ingredients: formatIngredients(meal)
         }))
     }
 
     // In the case where the user chooses area, category, or main ingredient, this function is ran
-    // Calling the API for those topics only return recipe names, not recipe information like ingredients or instructions
+    // Calling the API for those topics only returns recipe names, not recipe information like ingredients or instructions
     // So this function is to get the missing data for the recipes when those certain topics are chosen
     const getRecipeData = async (recipeName) => {
         try {
@@ -106,7 +107,9 @@ export default function Search() {
                     const updatedRecipe = {
                         ...recipe,
                         instructions: data.strInstructions || recipe.instructions,
-                        ingredients: extractIngredients(data),
+                        ingredients: formatIngredients(data),
+                        category: data.strCategory || 'Unavailable',
+                        area: data.strArea || 'Unavailable'
                     }
 
                     updatedRecipes.push(updatedRecipe)
@@ -129,7 +132,6 @@ export default function Search() {
 
         try {
             const endpoint = getEndpoint(searchType, query)
-
             const response = await fetch(endpoint)
 
             if (!response.ok) {
@@ -142,6 +144,7 @@ export default function Search() {
             if (formattedRecipes.length === 0) {
                 setError('No recipes found. Try a different search term that is relevant to your chosen topic.')
                 setRecipes([])
+                return
             }
 
             formattedRecipes = await fillRecipeData(formattedRecipes)
@@ -159,8 +162,8 @@ export default function Search() {
     }
 
     return(
-        <div className="flex flex-row justify-between px-19 py-10 h-200">
-            <div className="w-[40%] text-left text-2xl flex flex-col">
+        <div className="flex flex-row justify-center px-20 py-10 space-x-20 h-200">
+            <div className="w-[35%] text-left text-2xl flex flex-col">
                 <p className="py-3">Only remember part of the name of a recipe?</p>
                 <p className="py-3">Don’t know what you can make with your ingredients?</p>
                 <p className="py-3">Want to try something different?</p>
@@ -176,8 +179,16 @@ export default function Search() {
                     <img src={lines} alt="lines" className="w-130 h-auto"/>
                 </div>
             </div>
-            <div className="flex flex-col w-[35%] gap-6">
-                <SearchTopic onSearch={handleSearch} searchType={searchType} setSearchType={setSearchType} inputText={inputText} setInputText={setInputText} setError={setError} setRecipes={setRecipes}/>
+            <div className="flex flex-col w-[40%] gap-6">
+                <SearchTopic
+                    onSearch={handleSearch}
+                    searchType={searchType}
+                    setSearchType={setSearchType}
+                    inputText={inputText}
+                    setInputText={setInputText}
+                    setError={setError}
+                    setRecipes={setRecipes}
+                />
 
                 <div className="bg-white p-6 rounded-xl shadow-2xl max-h-full flex-1 space-y-5 overflow-y-auto">
                     <SearchHint searchType={searchType} />
@@ -189,13 +200,21 @@ export default function Search() {
                     )}
 
                     {recipes.map((recipe, idx) => (
-                        <SearchResult key={idx} number={idx + 1} name={recipe.name} image={recipe.image} /* recipeData={recipe} <--- uncomment this */ />
+                        <SearchResult
+                            key={idx}
+                            number={idx + 1}
+                            name={recipe.name}
+                            image={recipe.image}
+                            area={recipe.area}
+                            category={recipe.category}
+                            /* recipeData={recipe} <--- uncomment this */
+                        />
                     ))}
 
                     {loading && (
                         <div className="flex flex-row space-x-5">
                             <p className="text-2xl">Fetching your recipe data, hang tight!</p>
-                            <span className="loading loading-spinner text-primary loading-lg"></span>
+                            <span className="loading loading-spinner text-primary loading-xl"></span>
                         </div>
                     )}
                 </div>
