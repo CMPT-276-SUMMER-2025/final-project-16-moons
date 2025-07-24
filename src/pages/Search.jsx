@@ -200,6 +200,9 @@ export default function Search() {
                     )}
 
                     {recipes.map((recipe, idx) => (
+
+                        <SearchResult key={idx} number={idx + 1} name={recipe.name} image={recipe.image}  recipeData={recipe}  />
+
                         <SearchResult
                             key={idx}
                             number={idx + 1}
@@ -207,8 +210,9 @@ export default function Search() {
                             image={recipe.image}
                             area={recipe.area}
                             category={recipe.category}
-                            /* recipeData={recipe} <--- uncomment this */
+                             recipeData={recipe} 
                         />
+
                     ))}
 
                     {loading && (
