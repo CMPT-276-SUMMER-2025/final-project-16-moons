@@ -201,9 +201,9 @@ export default function Search() {
 
                     {recipes.map((recipe, idx) => (
 
-                        <SearchResult key={idx} number={idx + 1} name={recipe.name} image={recipe.image}  recipeData={recipe}  />
+                        <SearchResult key={idx} number={idx + 1} name={recipe.name} image={recipe.image}  recipeData={recipe} area={recipe.area} category={recipe.category} />
 
-                    
+
 
                     ))}
 
