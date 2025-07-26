@@ -101,7 +101,7 @@ export default function RecipeDetail() {
 
   if (!selectedRecipe) {
     return (
-      <div className="p-6 text-center">
+      <div className="p-6 text-center h-200">
         <h1 className="text-3xl font-bold mb-4 text-gray-800">No recipe selected</h1>
         <p className="text-gray-600">Please go back and select a recipe from the search page.</p>
       </div>
@@ -109,82 +109,88 @@ export default function RecipeDetail() {
   }
 
   return (
-    <div className="p-8 bg-white rounded-xl shadow-lg max-w-screen-xl mx-auto relative">
-      {/* Close Button */}
-      <button
-        onClick={handleClick}
-        className="absolute top-4 right-4 bg-red-600 hover:bg-red-700 text-white rounded-full w-9 h-9 flex items-center justify-center shadow-md"
-        title="Back to Search"
-      >
-        <FaTimes />
-      </button>
+    <div className="h-200 w-full flex items-center justify-center p-10">
+        <div className="bg-white rounded-xl shadow-2xl w-[70%] p-10">
+            <div className="flex flex-row justify-between">
+                {/* Header */}
+                <div className="flex items-center mb-10">
+                    <div className="flex gap-6">
+                        <img
+                            src={selectedRecipe.image}
+                            alt={selectedRecipe.name}
+                            className="w-52 h-52 object-cover rounded-xl border shadow"
+                        />
+                        <div>
+                            <h1 className="text-4xl font-bold text-gray-800">{selectedRecipe.name}</h1>
+                            <p className="mt-2 text-gray-600 italic">Powered by TheMealDB & Nutrition API</p>
+                        </div>
+                    </div>
+                </div>
 
-      {/* Header */}
-      <div className="flex items-center justify-between mb-10">
-        <div className="flex gap-6 items-center">
-          <img
-            src={selectedRecipe.image}
-            alt={selectedRecipe.name}
-            className="w-52 h-52 object-cover rounded-xl border shadow"
-          />
-          <div>
-            <h1 className="text-4xl font-bold text-gray-800">{selectedRecipe.name}</h1>
-            <p className="mt-2 text-gray-600 italic">Powered by TheMealDB & Nutrition API</p>
-          </div>
+                <div className="flex flex-row gap-5">
+                    <button
+                    onClick={handleDownloadPDF}
+                    className="btn btn-primary text-white px-5 py-2.5 rounded-full flex items-center gap-2 transition"
+                    >
+                        <FaFileDownload /> Save as PDF
+                    </button>
+                    {/* Close Button */}
+                    <button
+                        onClick={handleClick}
+                        className="btn btn-primary text-white rounded-full flex items-center justify-center"
+                        title="Back to Search"
+                    >
+                        <FaTimes />
+                    </button>
+                </div>
+            </div>
+
+
+            {/* Section Panels */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Ingredients */}
+                <div className="bg-orange-50 border border-orange-200 rounded-lg p-5 shadow-inner overflow-y-auto h-[420px]">
+                <h2 className="text-xl font-semibold text-orange-700 mb-3">🧂 Ingredients</h2>
+                <ul className="list-disc ml-5 space-y-1 text-gray-700">
+                    {selectedRecipe.ingredients.map((ing, idx) => (
+                    <li key={idx}>
+                        <span className="font-medium">{ing.name}</span> - {ing.measure}
+                    </li>
+                    ))}
+                </ul>
+            </div>
+
+            {/* Instructions */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 shadow-inner overflow-y-auto h-[420px]">
+            <h2 className="text-xl font-semibold text-blue-700 mb-3">📋 Instructions</h2>
+            <p className="text-gray-700 text-sm whitespace-pre-line leading-relaxed">
+                {selectedRecipe.instructions}
+            </p>
+            </div>
+
+            {/* Nutrition */}
+            <div className="bg-green-50 border border-green-200 rounded-lg p-5 shadow-inner overflow-y-auto h-[420px]">
+                <h2 className="text-xl font-semibold text-green-700 mb-3">🥗 Nutrition Analysis</h2>
+                {loading ? (
+                    <p className="text-gray-600">Loading nutrition data...</p>
+                ) : (
+                    <>
+                    <ul className="list-disc ml-5 space-y-1 text-gray-700">
+                        {nutritionOrder.map((key) => (
+                        <li key={key}>
+                            <span className="font-medium">{displayLabel[key]}</span>:{" "}
+                            {totals[key].toFixed(1)}
+                        </li>
+                        ))}
+                    </ul>
+                    <p className="mt-4 font-semibold text-lg text-green-800">
+                        🔥 Estimated Calories: {estimatedCalories.toFixed(0)} kcal
+                    </p>
+                    </>
+                )}
+                </div>
+            </div>
         </div>
-
-        <button
-          onClick={handleDownloadPDF}
-          className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-lg shadow flex items-center gap-2 transition"
-        >
-          <FaFileDownload /> Save as PDF
-        </button>
-      </div>
-
-      {/* Section Panels */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Ingredients */}
-        <div className="bg-orange-50 border border-orange-200 rounded-lg p-5 shadow-inner overflow-y-auto h-[420px]">
-          <h2 className="text-xl font-semibold text-orange-700 mb-3">🧂 Ingredients</h2>
-          <ul className="list-disc ml-5 space-y-1 text-gray-700">
-            {selectedRecipe.ingredients.map((ing, idx) => (
-              <li key={idx}>
-                <span className="font-medium">{ing.name}</span> - {ing.measure}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Instructions */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 shadow-inner overflow-y-auto h-[420px]">
-          <h2 className="text-xl font-semibold text-blue-700 mb-3">📋 Instructions</h2>
-          <p className="text-gray-700 text-sm whitespace-pre-line leading-relaxed">
-            {selectedRecipe.instructions}
-          </p>
-        </div>
-
-        {/* Nutrition */}
-        <div className="bg-green-50 border border-green-200 rounded-lg p-5 shadow-inner overflow-y-auto h-[420px]">
-          <h2 className="text-xl font-semibold text-green-700 mb-3">🥗 Nutrition Analysis</h2>
-          {loading ? (
-            <p className="text-gray-600">Loading nutrition data...</p>
-          ) : (
-            <>
-              <ul className="list-disc ml-5 space-y-1 text-gray-700">
-                {nutritionOrder.map((key) => (
-                  <li key={key}>
-                    <span className="font-medium">{displayLabel[key]}</span>:{" "}
-                    {totals[key].toFixed(1)}
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-4 font-semibold text-lg text-green-800">
-                🔥 Estimated Calories: {estimatedCalories.toFixed(0)} kcal
-              </p>
-            </>
-          )}
-        </div>
-      </div>
     </div>
   );
 }

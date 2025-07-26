@@ -62,8 +62,8 @@ export default function Search() {
         return data.meals.map(meal => ({
             name: meal.strMeal,
             image: meal.strMealThumb,
-            category: meal.strCategory || 'Unavailable',
-            area: meal.strArea || 'Unavailable',
+            category: meal.strCategory,
+            area: meal.strArea,
             instructions: meal.strInstructions,
             ingredients: formatIngredients(meal)
         }))
@@ -108,16 +108,12 @@ export default function Search() {
                         ...recipe,
                         instructions: data.strInstructions || recipe.instructions,
                         ingredients: formatIngredients(data),
-                        category: data.strCategory || 'Unavailable',
-                        area: data.strArea || 'Unavailable'
+                        category: data.strCategory,
+                        area: data.strArea
                     }
 
                     updatedRecipes.push(updatedRecipe)
-                } else {
-                    updatedRecipes.push(recipe)
                 }
-            } else {
-                updatedRecipes.push(recipe)
             }
         }
 
@@ -170,13 +166,13 @@ export default function Search() {
                 <p className="py-3">Don’t worry! Search for tons of amazing recipes by area, name, category, or main ingredient.  </p>
                 <p className="py-3">You can get started by simply clicking on the search method you want to use, on the right.</p>
                 <p className="py-3">Once you're done searching, click on a recipe to see its detailed information!</p>
-                <div className="flex justify-center space-x-8 mt-auto pr-50">
+                <div className="flex justify-center space-x-8 mt-auto">
                     <img src={meat} alt="meat" className="w-15 h-15 object-cover rounded"/>
                     <img src={carrot} alt="carrot" className="w-15 h-15 object-cover rounded"/>
                     <img src={apple} alt="apple" className="w-15 h-15 object-cover rounded"/>
                 </div>
-                <div className="flex justify-center mt-4 pr-50">
-                    <img src={lines} alt="lines" className="w-130 h-auto"/>
+                <div className="flex justify-center mt-4">
+                    <img src={lines} alt="lines" className="w-130"/>
                 </div>
             </div>
             <div className="flex flex-col w-[40%] gap-6">
