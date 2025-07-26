@@ -143,7 +143,11 @@ export default function Search() {
                 return
             }
 
-            formattedRecipes = await fillRecipeData(formattedRecipes)
+            // Only fill recipe data for non-name searches
+            // Name searches already return complete data
+            if (searchType !== 'name') {
+                formattedRecipes = await fillRecipeData(formattedRecipes)
+            }
 
             setRecipes(formattedRecipes)
 
@@ -161,9 +165,9 @@ export default function Search() {
         <div className="flex flex-row justify-center px-20 py-10 space-x-20 h-200">
             <div className="w-[35%] text-left text-2xl flex flex-col">
                 <p className="py-3">Only remember part of the name of a recipe?</p>
-                <p className="py-3">Don’t know what you can make with your ingredients?</p>
+                <p className="py-3">Don't know what you can make with your ingredients?</p>
                 <p className="py-3">Want to try something different?</p>
-                <p className="py-3">Don’t worry! Search for tons of amazing recipes by area, name, category, or main ingredient.  </p>
+                <p className="py-3">Don't worry! Search for tons of amazing recipes by area, name, category, or main ingredient.  </p>
                 <p className="py-3">You can get started by simply clicking on the search method you want to use, on the right.</p>
                 <p className="py-3">Once you're done searching, click on a recipe to see its detailed information!</p>
                 <div className="flex justify-center space-x-8 mt-auto">
@@ -196,11 +200,7 @@ export default function Search() {
                     )}
 
                     {recipes.map((recipe, idx) => (
-
                         <SearchResult key={idx} number={idx + 1} name={recipe.name} image={recipe.image}  recipeData={recipe} area={recipe.area} category={recipe.category} />
-
-
-
                     ))}
 
                     {loading && (
@@ -212,6 +212,5 @@ export default function Search() {
                 </div>
             </div>
         </div>
-
     );
 }
