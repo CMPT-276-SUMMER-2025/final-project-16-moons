@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import useRecipe from '../../Hooks/UseRecipe.js';
 import { FaFileDownload, FaTimes } from 'react-icons/fa';
 
@@ -7,6 +7,19 @@ export default function SearchResult({ number, name, image, area, category, reci
   const [showModal, setShowModal] = useState(false);
   const [nutritionData, setNutritionData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const modalRef = useRef(null);
+
+  // Disable scroll on body when modal is open
+  useEffect(() => {
+    if (showModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [showModal]);
 
   const nutritionOrder = [
     "fat_total_g", "sodium_mg", "potassium_mg",
@@ -27,19 +40,6 @@ export default function SearchResult({ number, name, image, area, category, reci
     setSelectedRecipe(recipeData);
     setShowModal(true);
   };
-
-  // --- DISABLE PAGE SCROLL WHEN MODAL IS OPEN ---
-  useEffect(() => {
-    if (showModal) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [showModal]);
-  // ------------------------------------------------
 
   useEffect(() => {
     const fetchNutrition = async () => {
@@ -110,79 +110,84 @@ export default function SearchResult({ number, name, image, area, category, reci
       </div>
 
       {showModal && selectedRecipe && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md animate-fadeIn">
-          {/* Glassmorphic modal */}
-          <div className="relative w-[95%] max-w-5xl p-0 overflow-visible rounded-3xl shadow-2xl border border-white/30 bg-white/80 backdrop-blur-lg animate-popUp">
-            {/* Close button */}
-            <button
-              onClick={() => setShowModal(false)}
-              className="absolute top-5 right-6 text-3xl text-gray-500 hover:text-primary hover:scale-125 transition-all z-10 bg-white/70 rounded-full p-2 shadow"
-              aria-label="Close"
-            >
-              <FaTimes />
-            </button>
+        <div className="fixed inset-0 z-50">
+          {/* Enhanced backdrop with consistent blur */}
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-xl transition-all duration-500"></div>
+          
+          {/* Modal container */}
+          <div 
+            ref={modalRef}
+            className="fixed inset-0 flex items-center justify-center p-4 overflow-y-auto"
+          >
+            <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-6xl p-10 max-h-[90vh] overflow-y-auto border border-gray-200">
+              <button
+                onClick={() => setShowModal(false)}
+                className="absolute top-4 right-4 text-2xl text-gray-500 hover:text-gray-800 transition"
+              >
+                <FaTimes />
+              </button>
 
-            <div className="flex flex-col gap-8 p-8 pb-6">
-              {/* Header */}
-              <div className="flex flex-col md:flex-row justify-between gap-8 items-center mb-4">
-                <div className="flex gap-6 items-center">
+              <div className="flex flex-col md:flex-row justify-between items-start mb-10 gap-6">
+                <div className="flex gap-6">
                   <img
                     src={selectedRecipe.image}
                     alt={selectedRecipe.name}
-                    className="w-48 h-48 object-cover rounded-2xl border-2 border-primary/30 shadow-lg"
+                    className="w-52 h-52 object-cover rounded-xl border-2 border-gray-300 shadow-lg"
                   />
                   <div>
-                    <h1 className="text-4xl font-black tracking-tight text-gray-900 drop-shadow-sm">{selectedRecipe.name}</h1>
-                    <div className="flex gap-4 mt-2 text-sm font-medium text-gray-500">
-                      <span>🌍 {area}</span>
-                      <span>🍴 {category}</span>
+                    <h1 className="text-4xl font-extrabold text-gray-900">{selectedRecipe.name}</h1>
+                    <p className="mt-2 text-gray-500 text-sm italic">Powered by TheMealDB & Nutrition API</p>
+                    <div className="mt-4 space-y-1">
+                      <p className="text-sm text-gray-600"><strong>Area:</strong> {selectedRecipe.area}</p>
+                      <p className="text-sm text-gray-600"><strong>Category:</strong> {selectedRecipe.category}</p>
                     </div>
-                    <p className="mt-2 text-gray-500 italic text-xs">Powered by TheMealDB &amp; Nutrition API</p>
                   </div>
                 </div>
+
                 <button
                   onClick={() => window.print()}
-                  className="btn btn-primary text-white px-6 py-2.5 rounded-full flex items-center gap-2 shadow-md hover:scale-105 transition"
+                  className="btn btn-primary text-white px-6 py-2.5 rounded-full shadow hover:brightness-110 transition-all duration-200 flex items-center gap-2"
                 >
                   <FaFileDownload /> Save as PDF
                 </button>
               </div>
 
-              {/* Modal content grid */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Ingredients */}
-                <div className="bg-gradient-to-tr from-orange-100 via-orange-50 to-white/60 border border-orange-200 rounded-2xl p-6 shadow-inner h-[420px] overflow-y-auto">
-                  <h2 className="text-xl font-bold text-orange-700 mb-3 flex items-center gap-1">🧂 Ingredients</h2>
-                  <ul className="list-disc ml-5 space-y-1 text-gray-700 font-medium">
+                <div className="bg-orange-50 border border-orange-200 rounded-xl p-5 shadow-inner h-[420px] overflow-y-auto">
+                  <h2 className="text-xl font-semibold text-orange-700 mb-4">🧂 Ingredients</h2>
+                  <ul className="list-disc ml-5 space-y-1 text-gray-800">
                     {selectedRecipe.ingredients.map((ing, idx) => (
                       <li key={idx}>
-                        <span className="font-semibold">{ing.name}</span> – {ing.measure}
+                        <span className="font-semibold">{ing.name}</span> — {ing.measure}
                       </li>
                     ))}
                   </ul>
                 </div>
+
                 {/* Instructions */}
-                <div className="bg-gradient-to-tr from-blue-100 via-blue-50 to-white/60 border border-blue-200 rounded-2xl p-6 shadow-inner h-[420px] overflow-y-auto">
-                  <h2 className="text-xl font-bold text-blue-700 mb-3 flex items-center gap-1">📋 Instructions</h2>
-                  <p className="text-gray-700 text-base whitespace-pre-line leading-relaxed font-medium">
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 shadow-inner h-[420px] overflow-y-auto">
+                  <h2 className="text-xl font-semibold text-blue-700 mb-4">📋 Instructions</h2>
+                  <p className="text-gray-700 text-sm whitespace-pre-line leading-relaxed">
                     {selectedRecipe.instructions}
                   </p>
                 </div>
+
                 {/* Nutrition */}
-                <div className="bg-gradient-to-tr from-green-100 via-green-50 to-white/60 border border-green-200 rounded-2xl p-6 shadow-inner h-[420px] overflow-y-auto">
-                  <h2 className="text-xl font-bold text-green-700 mb-3 flex items-center gap-1">🥗 Nutrition Analysis</h2>
+                <div className="bg-green-50 border border-green-200 rounded-xl p-5 shadow-inner h-[420px] overflow-y-auto">
+                  <h2 className="text-xl font-semibold text-green-700 mb-4">🥗 Nutrition Analysis</h2>
                   {loading ? (
                     <p className="text-gray-600">Loading nutrition data...</p>
                   ) : (
                     <>
-                      <ul className="list-disc ml-5 space-y-1 text-gray-700 font-medium">
+                      <ul className="list-disc ml-5 space-y-1 text-gray-800">
                         {nutritionOrder.map((key) => (
                           <li key={key}>
-                            <span className="font-semibold">{displayLabel[key]}</span>: {totals[key]?.toFixed(1)}
+                            <span className="font-medium">{displayLabel[key]}</span>: {totals[key]?.toFixed(1)}
                           </li>
                         ))}
                       </ul>
-                      <p className="mt-4 font-bold text-xl text-green-900 drop-shadow">
+                      <p className="mt-4 font-semibold text-lg text-green-800">
                         🔥 Estimated Calories: {estimatedCalories.toFixed(0)} kcal
                       </p>
                     </>
@@ -191,23 +196,6 @@ export default function SearchResult({ number, name, image, area, category, reci
               </div>
             </div>
           </div>
-          {/* Animation for modal fade-in */}
-          <style>{`
-            @keyframes fadeIn {
-              0% { opacity: 0 }
-              100% { opacity: 1 }
-            }
-            .animate-fadeIn {
-              animation: fadeIn 0.22s cubic-bezier(0.16,1,0.3,1);
-            }
-            @keyframes popUp {
-              0% { transform: scale(0.96) translateY(30px); opacity: 0; }
-              100% { transform: scale(1) translateY(0); opacity: 1; }
-            }
-            .animate-popUp {
-              animation: popUp 0.33s cubic-bezier(0.18,0.89,0.32,1.28);
-            }
-          `}</style>
         </div>
       )}
     </>
