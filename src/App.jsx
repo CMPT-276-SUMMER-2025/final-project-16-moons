@@ -7,9 +7,8 @@ import Indecisive from './pages/Indecisive';
 import Contact from './pages/Contact';
 import Footer from './components/Footer';
 import Navbar from './components/Navbar';
-
 import './App.css';
-import SearchPagePopUp from './pages/SearchPagePopUp';
+
 
 function App() {
   return (
@@ -20,7 +19,6 @@ function App() {
       <Routes>
         <Route exact path ="/" element={<Home />} />
         <Route path ="/search" element={<Search />} />
-        <Route path='/search/recipe' element = {<SearchPagePopUp/>} />
         <Route path ="/scanner" element={<Scanner />} />
         <Route path ="/indecisive" element={<Indecisive />} />
         <Route path ="/contact" element={<Contact />} />
