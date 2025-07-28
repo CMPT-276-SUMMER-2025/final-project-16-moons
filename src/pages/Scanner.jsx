@@ -120,11 +120,11 @@ export default function Scanner() {
             </div>
             <div className="flex flex-col w-[40%] gap-6">
                 <div className="bg-white p-6 rounded-xl shadow-2xl max-h-full flex-1 space-y-5 overflow-y-auto">
-                    <div className="flex flex-row">
+                    <div className="flex flex-row justify-between">
                         <h1 className="text-3xl font-medium mb-2">Nutrition Analysis</h1>
                         <button
                             onClick={() => window.print()}
-                            className="btn btn-primary justify-end text-white px-6 py-2.5 rounded-full shadow hover:brightness-110 transition-all duration-200 flex items-center gap-2"
+                            className="btn btn-primary text-white px-6 py-2.5 rounded-full shadow hover:brightness-110 transition-all duration-200 flex items-center gap-2"
                         >
                             <FaFileDownload /> Save as PDF
                         </button>
