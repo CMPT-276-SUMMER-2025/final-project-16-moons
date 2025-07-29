@@ -1,23 +1,17 @@
-/*export default function Scanner() {
-    return(
-        <div className="flex items-center justify-center h-200">
-            <h1 className="text-7xl">Scanner Page</h1>
-        </div>
-    );
-}*/
-
 import { useState } from "react";
 import meat from '../assets/icons/meat.png'
 import apple from '../assets/icons/apple.png'
 import carrot from '../assets/icons/carrot.png'
 import lines from '../assets/images/linesHorizontal.png'
-import { FaFileDownload, FaTimes } from 'react-icons/fa';
+import { FaFileDownload } from 'react-icons/fa';
 
 export default function Scanner() {
     const [image, setImage] = useState(null);
     const [nutritionInfo, setNutritionInfo] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+
+    const key = import.meta.env.VITE_API_NINJAS_KEY
 
     const imageChange = (e) => {
         setImage(e.target.files[0]);
@@ -26,7 +20,7 @@ export default function Scanner() {
     };
 
     const handleAnalyse = async () => {
-        if (!image) { 
+        if (!image) {
             setError("Error: Please upload image.");
             return;
         }
@@ -43,8 +37,7 @@ export default function Scanner() {
             const imageToText = await fetch("https://api.api-ninjas.com/v1/imagetotext", {
                 method: "POST",
                 headers: {
-                    "X-Api-Key": "qyFoT5C9lkOgKG1EcxLVvQ==we8cqSXl92HpZ3Xj", //alans api key, feel free to replce if it stops working in the future
-                    //"X-Api-Key": import.meta.env.VITE_API_NINJAS_KEY,
+                    "X-Api-Key": key,
                 },
                 body: formData,
             });
@@ -62,7 +55,7 @@ export default function Scanner() {
                 {
                     method: "GET",
                     headers: {
-                        "X-Api-Key": "qyFoT5C9lkOgKG1EcxLVvQ==we8cqSXl92HpZ3Xj", //alans api key, feel free to replace if it stops working in the future
+                        "X-Api-Key": key,
                     },
                 }
 
@@ -78,14 +71,6 @@ export default function Scanner() {
             setLoading(false);
         }
     };
-
-    const toBase64 = (file) =>
-        new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result.split(",")[1]);
-            reader.onerror = reject;
-        });
 
     return (
         <div className="flex flex-row justify-center px-20 py-10 space-x-20 h-200">
@@ -143,7 +128,7 @@ export default function Scanner() {
                                 <p>Total Carbs: {item.carbohydrates_total_g} g</p>
                                 <p>Fibre: {item.fiber_g} g</p>
                                 <p>Sugar: {item.sugar_g} g</p>
-                                
+
                             </li>
                             ))}
                         </ul>
