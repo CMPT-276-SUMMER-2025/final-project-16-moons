@@ -9,6 +9,9 @@ export default function SearchResult({ number, name, image, area, category, reci
   const [loading, setLoading] = useState(false);
   const modalRef = useRef(null);
 
+  const key = import.meta.env.VITE_API_NINJAS_KEY
+
+
   // Disable scroll on body when modal is open
   useEffect(() => {
     if (showModal) {
@@ -53,7 +56,7 @@ export default function SearchResult({ number, name, image, area, category, reci
               `https://api.api-ninjas.com/v1/nutrition?query=${encodeURIComponent(query)}`,
               {
                 headers: {
-                  "X-Api-Key": import.meta.env.VITE_API_NINJA_KEY,
+                  "X-Api-Key": key,
                 },
               }
             );
@@ -113,9 +116,9 @@ export default function SearchResult({ number, name, image, area, category, reci
         <div className="fixed inset-0 z-50">
           {/* Enhanced backdrop with consistent blur */}
           <div className="fixed inset-0 bg-black/50 backdrop-blur-xl transition-all duration-500"></div>
-          
+
           {/* Modal container */}
-          <div 
+          <div
             ref={modalRef}
             className="fixed inset-0 flex items-center justify-center p-4 overflow-y-auto"
           >
