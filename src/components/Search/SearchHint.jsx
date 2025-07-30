@@ -8,7 +8,7 @@ export default function SearchHint({ searchType }) {
     }
 
     return (
-        <div className="bg-base-200 p-6 rounded-xl hover:bg-primary hover:text-white transition duration-300 hover:scale-102">
+        <div className="bg-base-200 p-6 rounded-xl shadow-lg">
             <h1>{hints[searchType]}</h1>
         </div>
     )

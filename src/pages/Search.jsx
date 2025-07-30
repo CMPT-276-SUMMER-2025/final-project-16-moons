@@ -205,7 +205,7 @@ export default function Search() {
 
                     {loading && (
                         <div className="flex flex-row space-x-5">
-                            <p className="text-2xl">Fetching your recipe data, hang tight!</p>
+                            <p className="text-2xl">Fetching recipes, hang tight!</p>
                             <span className="loading loading-spinner text-primary loading-xl"></span>
                         </div>
                     )}

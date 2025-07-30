@@ -31,28 +31,28 @@ export default function SearchTopic({ onSearch, searchType, setSearchType, input
                 <button
                     onClick={() => {setSearchType("area"), setInputText(''), setError(''), setRecipes([])}}
                     className={`${searchType === "area" ? "bg-[#DE6B48]" : "bg-[#C0BABA]"}
-                                hover:bg-[#DE6B48] text-white py-2 px-5 rounded-full transition-all duration-300 hover:scale-110`}
+                                hover:bg-[#DE6B48] text-white py-2 px-5 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer shadow-xl`}
                 >
                         Area
                 </button>
                 <button
                     onClick={() => {setSearchType("name"), setInputText(''), setError(''), setRecipes([])}}
                     className={`${searchType === "name" ? "bg-[#DE6B48]" : "bg-[#C0BABA]"}
-                                hover:bg-[#DE6B48] text-white px-4 rounded-full transition-all duration-300 hover:scale-110`}
+                                hover:bg-[#DE6B48] text-white px-4 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer shadow-xl`}
                     >
                         Name
                 </button>
                 <button
                     onClick={() => {setSearchType("category"), setInputText(''), setError(''), setRecipes([])}}
                     className={`${searchType === "category" ? "bg-[#DE6B48]" : "bg-[#C0BABA]"}
-                                hover:bg-[#DE6B48] text-white px-4 rounded-full transition-all duration-300 hover:scale-110`}
+                                hover:bg-[#DE6B48] text-white px-4 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer shadow-xl`}
                     >
                         Category
                 </button>
                 <button
                     onClick={() => {setSearchType("ingredient"), setInputText(''), setError(''), setRecipes([])}}
                     className={`${searchType === "ingredient" ? "bg-[#DE6B48]" : "bg-[#C0BABA]"}
-                                hover:bg-[#DE6B48] text-white px-4 rounded-full transition-all duration-300 hover:scale-110`}
+                                hover:bg-[#DE6B48] text-white px-4 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer shadow-xl`}
                     >
                         Main Ingredient
                 </button>
