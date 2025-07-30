@@ -56,13 +56,14 @@ export default function Scanner() {
 
             );
 
-            if (!nutrition.ok) throw new Error("Error: Couldn't fetch nutritional info.");
+            if (!nutrition.ok) throw new Error("Couldn't analyze nutritional info. Try another image with cleaner text font.");
 
             const data = await nutrition.json();
             setNutritionData(data);
-        }   catch (err) {
+        } catch (err) {
+            setError(err.message);
             setError("Couldn't analyze nutritional info. Try another image with cleaner text font.");
-        }   finally {
+        } finally {
             setLoading(false);
         }
     };
@@ -234,7 +235,7 @@ export default function Scanner() {
                         </div>
                     )}
                     {error && (
-                        <div className="bg-base-200 p-6 rounded-xl shadow-lg">
+                        <div className="bg-base-200 p-6 rounded-xl shadow-lg text-red">
                             <h1>{error}</h1>
                         </div>
                     )}
