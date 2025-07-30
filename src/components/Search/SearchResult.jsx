@@ -165,10 +165,10 @@ export default function SearchResult({ number, name, image, area, category, reci
             .calories {
               font-size: 18px;
               font-weight: bold;
-              background-color: #e3f2fd;
+              background-color: #e9a48dff;
               padding: 10px;
               border-radius: 5px;
-              text-align: center;
+              text-align: left;
               margin-top: 15px;
             }
             @media print {
