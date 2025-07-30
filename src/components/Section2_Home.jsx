@@ -53,7 +53,7 @@ function Section2_Home() {
           onClick={() => {
               window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className="tooltip w-fit btn btn-primary rounded-full shadow-2xl transition duration-300 hover:scale-110"
+          className="tooltip w-fit btn btn-primary rounded-full shadow-xl transition duration-300 hover:scale-110"
           data-tip="Scroll up the page!"
           >
           <img className="h-8 w-8 rotate-180" src={arrow} alt="Black icon of an upwards pointing greater than symbol." />
