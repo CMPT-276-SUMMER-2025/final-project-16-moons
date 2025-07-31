@@ -20,8 +20,8 @@ export default function EmailForm() {
             e.target,
             'ZX4gaCCwYyqMgwaK2'
         ).then(
-            (result) => setShowSuccessMessage(true),
-            (error) => setShowErrorMessage(true)
+            () => setShowSuccessMessage(true),
+            () => setShowErrorMessage(true)
         )
 
         setName('')
@@ -110,7 +110,7 @@ export default function EmailForm() {
                 </button>
             </div>
             {showSuccessMessage && (
-                <div role="alert" className="alert bg-primary -mt-15 mb-15 text-white">
+                <div role="alert" className="alert bg-base-200 -mt-15 mb-15 text-black font-medium">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
                         <path
                             strokeLinecap="round"
@@ -123,7 +123,7 @@ export default function EmailForm() {
                 </div>
             )}
             {showErrorMessage && (
-                <div role="alert" class="alert bg-error -mt-15 mb-15 text-white">
+                <div role="alert" class="alert bg-base-200 -mt-15 mb-15 text-error font-medium">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
                         <path
                             stroke-linecap="round"
