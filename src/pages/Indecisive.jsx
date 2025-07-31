@@ -28,8 +28,18 @@ export default function Scanner() {
         return ingredients
     }
 
+    // Check if a recipe has all the required data
+    const isRecipeComplete = (meal) => {
+        return (
+            meal.strMeal && meal.strMeal.trim() &&
+            meal.strMealThumb && meal.strMealThumb.trim() &&
+            meal.strCategory && meal.strCategory.trim() &&
+            meal.strArea && meal.strArea.trim()
+        )
+    }
+
     // Format a recipe to have name, image, instructions, and ingredients
-    const formatRecipe = (meal, mealType) => {
+    const formatRecipe = (meal) => {
         return {
             name: meal.strMeal,
             image: meal.strMealThumb,
@@ -37,7 +47,6 @@ export default function Scanner() {
             area: meal.strArea,
             instructions: meal.strInstructions,
             ingredients: formatIngredients(meal),
-            mealType: mealType
         }
     }
 
@@ -65,7 +74,6 @@ export default function Scanner() {
         setLoading(true)
 
         try {
-            const mealTypes = ['Breakfast', 'Lunch', 'Dinner']
             const recipes = []
 
             for (let i = 0; i < 3; i++) {
@@ -74,8 +82,10 @@ export default function Scanner() {
 
             const meals = await Promise.all(recipes)
 
-            const formattedRecipes = meals.map((meal, idx) =>
-                formatRecipe(meal, mealTypes[idx])
+            const formattedRecipes = meals
+                .filter(meal => isRecipeComplete(meal))
+                .map((meal) =>
+                    formatRecipe(meal)
             )
 
             setRecipes(formattedRecipes)
@@ -116,19 +126,18 @@ export default function Scanner() {
                 <Horizontal />
             </div>
             <div className="flex flex-col w-[40%] gap-6">
-                <div className={`bg-white p-6 rounded-xl shadow-2xl max-h-full flex-1 space-y-5 overflow-y-auto transition ${isVisible ? 'opacity-100 translate-y-0 delay-100' : 'opacity-0 translate-y-10'}`}>
+                <div className="bg-white p-6 rounded-xl shadow-2xl max-h-full flex-1 space-y-5 overflow-y-auto">
                     <div className="flex flex-row justify-between">
                         <div className="space-y-6 w-full">
                             {recipes.map((recipe, idx) => (
                                 <div key={idx}>
-                                    <h1 className="text-3xl mb-4">{recipe.mealType}</h1>
-                                    <RandomRecipe key={`${recipe.mealType}-${idx}`} number={idx + 1} name={recipe.name} image={recipe.image} recipeData={recipe} area={recipe.area} category={recipe.category} />
+                                    <RandomRecipe key={idx} number={idx + 1} name={recipe.name} image={recipe.image} recipeData={recipe} area={recipe.area} category={recipe.category} />
                                 </div>
                             ))}
                         </div>
                     </div>
                     {recipes.length === 0 && !error && count === 0 && (
-                        <div className={`bg-base-200 p-6 rounded-xl shadow-lg transition ${isVisible ? 'opacity-100 translate-y-0 delay-300' : 'opacity-0 translate-y-10'}`}>
+                        <div className={`bg-base-200 p-6 rounded-xl shadow-lg transition ${isVisible ? 'opacity-100 translate-y-0 delay-100' : 'opacity-0 translate-y-10'}`}>
                             <h1>Looks like you haven't clicked the button yet. Click it on the left!</h1>
                         </div>
                     )}

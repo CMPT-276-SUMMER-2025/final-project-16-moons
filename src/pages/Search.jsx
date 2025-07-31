@@ -51,20 +51,28 @@ export default function Search() {
         return ingredients
     }
 
+    // Check if a recipe has all the required data
+    const isRecipeComplete = (meal) => {
+        return (
+            meal.strMeal && meal.strMeal.trim() &&
+            meal.strMealThumb && meal.strMealThumb.trim() &&
+            meal.strCategory && meal.strCategory.trim() &&
+            meal.strArea && meal.strArea.trim()
+        )
+    }
+
     // Format the recipes to have name, image, instructions, and ingredients
     const formatRecipes = (data) => {
-        if (!data || !data.meals) {
-            return []
-        }
-
-        return data.meals.map(meal => ({
-            name: meal.strMeal,
-            image: meal.strMealThumb,
-            category: meal.strCategory,
-            area: meal.strArea,
-            instructions: meal.strInstructions,
-            ingredients: formatIngredients(meal)
-        }))
+        return data.meals
+            .filter(meal => isRecipeComplete(meal))
+            .map(meal => ({
+                name: meal.strMeal,
+                image: meal.strMealThumb,
+                category: meal.strCategory,
+                area: meal.strArea,
+                instructions: meal.strInstructions,
+                ingredients: formatIngredients(meal)
+            }))
     }
 
     // In the case where the user chooses area, category, or main ingredient, this function is ran
@@ -188,7 +196,7 @@ export default function Search() {
                     setRecipes={setRecipes}
                 />
 
-                <div className={`bg-white p-6 rounded-xl shadow-2xl max-h-full flex-1 space-y-5 overflow-y-auto transition ${isVisible ? 'opacity-100 translate-y-0 delay-500' : 'opacity-0 translate-y-10'}`}>
+                <div className="bg-white p-6 rounded-xl shadow-2xl max-h-full flex-1 space-y-5 overflow-y-auto transition">
                     <SearchHint searchType={searchType} />
 
                     {error && (
