@@ -1,8 +1,5 @@
-import { useState } from "react";
-import meat from '../assets/icons/meat.png'
-import apple from '../assets/icons/apple.png'
-import carrot from '../assets/icons/carrot.png'
-import lines from '../assets/images/linesHorizontal.png'
+import { useState, useEffect } from "react";
+import Horizontal from '../components/Designs/Horizontal'
 import { FaFileDownload } from 'react-icons/fa';
 
 export default function Scanner() {
@@ -10,6 +7,7 @@ export default function Scanner() {
     const [nutritionData, setNutritionData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [isVisible, setIsVisible] = useState(false)
 
     const key = import.meta.env.VITE_API_NINJAS_KEY
 
@@ -116,6 +114,14 @@ export default function Scanner() {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        const showTimeout = setTimeout(() => setIsVisible(true), 300)
+
+        return () => {
+            clearTimeout(showTimeout);
+        }
+    })
 
     const generatePDF = () => {
         const printWindow = window.open('', '_blank');
@@ -239,8 +245,8 @@ export default function Scanner() {
 
     return (
         <div className="flex flex-row justify-center px-20 py-10 space-x-20 h-200">
-            <div className="w-[35%] text-left text-2xl flex flex-col">
-                <p className="py-3">Want to find out the nutrition facts of a menu, recipe, or food journal?</p>
+            <div className={`w-[35%] text-left text-3xl flex flex-col transition ${isVisible ? 'opacity-100 translate-y-0 delay-100' : 'opacity-0 translate-y-10'}`}>
+                <p className="pb-3">Want to find out the nutrition facts of a menu, recipe, or food journal?</p>
                 <p className="py-3">Just upload a picture of it and watch the magic happen!</p>
                 <div className="py-10">
                     <p className="text-sm text-secondary-content">Max file size: 200 KB</p>
@@ -258,29 +264,22 @@ export default function Scanner() {
                         Get Nutrition!
                     </button>
                 </div>
-                <div className="flex space-x-8 mt-auto pl-35">
-                    <img src={meat} alt="meat" className="w-15 h-15 object-cover rounded"/>
-                    <img src={carrot} alt="carrot" className="w-15 h-15 object-cover rounded"/>
-                    <img src={apple} alt="apple" className="w-15 h-15 object-cover rounded"/>
-                </div>
-                <div className="flex justify-start mt-4">
-                    <img src={lines} alt="lines" className="w-130"/>
-                </div>
+                <Horizontal />
             </div>
             <div className="flex flex-col w-[40%] gap-6">
-                <div className="bg-white p-6 rounded-xl shadow-2xl max-h-full flex-1 space-y-5 overflow-y-auto">
+                <div className={`bg-white p-6 rounded-xl shadow-2xl max-h-full flex-1 space-y-5 overflow-y-auto transition ${isVisible ? 'opacity-100 translate-y-0 delay-100' : 'opacity-0 translate-y-10'}`}>
                     <div className="flex flex-row justify-between">
-                        <h1 className="text-3xl mb-2">Nutrition Analysis</h1>
+                        <h1 className={`text-3xl mb-2 transition ${isVisible ? 'opacity-100 translate-y-0 delay-300' : 'opacity-0 translate-y-10'}`}>Nutrition Analysis</h1>
                         <button
                             onClick={generatePDF}
-                            className="btn btn-primary text-white px-6 py-2.5 rounded-full flex items-center transition-all duration-300 hover:scale-110 shadow-lg"
+                            className={`btn btn-primary text-white px-6 py-2.5 rounded-full flex items-center duration-300 hover:scale-110 shadow-lg transition ${isVisible ? 'opacity-100 translate-y-0 delay-300' : 'opacity-0 translate-y-10'}`}
                             disabled={nutritionData.length === 0}
                         >
                             <FaFileDownload /> Save as PDF
                         </button>
                     </div>
                     {(nutritionData.length === 0) && !error && !image && (
-                        <div className="bg-base-200 p-6 rounded-xl shadow-lg">
+                        <div className={`bg-base-200 p-6 rounded-xl shadow-lg transition ${isVisible ? 'opacity-100 translate-y-0 delay-500' : 'opacity-0 translate-y-10'}`}>
                             <h1>Looks like you haven't uploaded an image yet. Upload one on the left!</h1>
                         </div>
                     )}

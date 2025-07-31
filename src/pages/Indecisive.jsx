@@ -1,8 +1,5 @@
-import { useState } from "react";
-import meat from '../assets/icons/meat.png'
-import apple from '../assets/icons/apple.png'
-import carrot from '../assets/icons/carrot.png'
-import lines from '../assets/images/linesHorizontal.png'
+import { useState, useEffect } from "react";
+import Horizontal from '../components/Designs/Horizontal'
 import RandomRecipe from '../components/Search/SearchResult'
 
 export default function Scanner() {
@@ -10,6 +7,7 @@ export default function Scanner() {
     const [error, setError] = useState("")
     const [recipes, setRecipes] = useState([])
     const [count, setCount] = useState(0)
+    const [isVisible, setIsVisible] = useState(false)
 
     // Format the ingredients from the JSON data of one recipe
     const formatIngredients = (meal) => {
@@ -92,10 +90,18 @@ export default function Scanner() {
         }
     }
 
+    useEffect(() => {
+        const showTimeout = setTimeout(() => setIsVisible(true), 300)
+
+        return () => {
+            clearTimeout(showTimeout);
+        }
+    })
+
     return (
         <div className="flex flex-row justify-center px-20 py-10 space-x-20 h-200">
-            <div className="w-[35%] text-left text-2xl flex flex-col">
-                <p className="py-3">Don't know what you want to eat today?</p>
+            <div className={`w-[35%] text-left text-3xl flex flex-col transition ${isVisible ? 'opacity-100 translate-y-0 delay-100' : 'opacity-0 translate-y-10'}`}>
+                <p className="pb-3">Don't know what you want to eat today?</p>
                 <p className="py-3">Can't settle on a recipe?</p>
                 <p className="py-3">Let us do the work for you!</p>
                 <div className="py-10">
@@ -107,17 +113,10 @@ export default function Scanner() {
                         Surprise Me!
                     </button>
                 </div>
-                <div className="flex space-x-8 mt-auto pl-35">
-                    <img src={meat} alt="meat" className="w-15 h-15 object-cover rounded"/>
-                    <img src={carrot} alt="carrot" className="w-15 h-15 object-cover rounded"/>
-                    <img src={apple} alt="apple" className="w-15 h-15 object-cover rounded"/>
-                </div>
-                <div className="flex justify-start mt-4">
-                    <img src={lines} alt="lines" className="w-130"/>
-                </div>
+                <Horizontal />
             </div>
             <div className="flex flex-col w-[40%] gap-6">
-                <div className="bg-white p-6 rounded-xl shadow-2xl max-h-full flex-1 space-y-5 overflow-y-auto">
+                <div className={`bg-white p-6 rounded-xl shadow-2xl max-h-full flex-1 space-y-5 overflow-y-auto transition ${isVisible ? 'opacity-100 translate-y-0 delay-100' : 'opacity-0 translate-y-10'}`}>
                     <div className="flex flex-row justify-between">
                         <div className="space-y-6 w-full">
                             {recipes.map((recipe, idx) => (
@@ -129,7 +128,7 @@ export default function Scanner() {
                         </div>
                     </div>
                     {recipes.length === 0 && !error && count === 0 && (
-                        <div className="bg-base-200 p-6 rounded-xl shadow-lg">
+                        <div className={`bg-base-200 p-6 rounded-xl shadow-lg transition ${isVisible ? 'opacity-100 translate-y-0 delay-300' : 'opacity-0 translate-y-10'}`}>
                             <h1>Looks like you haven't clicked the button yet. Click it on the left!</h1>
                         </div>
                     )}

@@ -1,6 +1,8 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export default function SearchTopic({ onSearch, searchType, setSearchType, inputText, setInputText, setError, setRecipes }){
+    const [isVisible, setIsVisible] = useState(false)
+
     const placeholderText = {
         ingredient: "Search for recipes by main ingredient...",
         name: "Search for recipes by name...",
@@ -23,24 +25,29 @@ export default function SearchTopic({ onSearch, searchType, setSearchType, input
 
     useEffect(() => {
         setSearchType("initial")
+        const showTimeout = setTimeout(() => setIsVisible(true), 300)
+
+        return () => {
+            clearTimeout(showTimeout);
+        }
     }, [])
 
     return(
-        <div className="flex flex-col items-start pt-5 space-y-6">
-            <div className="flex justify-start space-x-6">
-                <button
-                    onClick={() => {setSearchType("area"), setInputText(''), setError(''), setRecipes([])}}
-                    className={`${searchType === "area" ? "bg-[#DE6B48]" : "bg-[#C0BABA]"}
-                                hover:bg-[#DE6B48] text-white py-2 px-5 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer shadow-xl`}
-                >
-                        Area
-                </button>
+        <div className="flex flex-col items-start pt-1 space-y-6">
+            <div className={`flex justify-start space-x-6 transition ${isVisible ? 'opacity-100 translate-y-0 delay-100' : 'opacity-0 translate-y-10'}`}>
                 <button
                     onClick={() => {setSearchType("name"), setInputText(''), setError(''), setRecipes([])}}
                     className={`${searchType === "name" ? "bg-[#DE6B48]" : "bg-[#C0BABA]"}
                                 hover:bg-[#DE6B48] text-white px-4 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer shadow-xl`}
                     >
                         Name
+                </button>
+                <button
+                    onClick={() => {setSearchType("area"), setInputText(''), setError(''), setRecipes([])}}
+                    className={`${searchType === "area" ? "bg-[#DE6B48]" : "bg-[#C0BABA]"}
+                                hover:bg-[#DE6B48] text-white py-2 px-5 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer shadow-xl`}
+                >
+                        Cuisine
                 </button>
                 <button
                     onClick={() => {setSearchType("category"), setInputText(''), setError(''), setRecipes([])}}
@@ -57,7 +64,7 @@ export default function SearchTopic({ onSearch, searchType, setSearchType, input
                         Main Ingredient
                 </button>
             </div>
-            <div className="relative flex items-center gap-2 w-full">
+            <div className={`relative flex items-center gap-2 w-full transition ${isVisible ? 'opacity-100 translate-y-0 delay-300' : 'opacity-0 translate-y-10'}`}>
                 <button
                 onClick={() => handleSearch()}
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#C0BABA] hover:text-[#C0BABA]">

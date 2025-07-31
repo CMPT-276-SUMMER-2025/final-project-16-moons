@@ -17,6 +17,7 @@ function WhatWeOfferCards(props) {
 
       <a
         href={props.link}
+        onClick={() => {window.scrollTo({ top: 0, behavior: 'smooth' })}}
         className="btn btn-primary text-lg py-2 px-8 rounded-full transition duration-300 hover:scale-110 shadow-xl"
       >
         Check it out!
