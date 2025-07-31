@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import useRecipe from '../../Hooks/UseRecipe.js';
-import { FaFileDownload } from 'react-icons/fa';
-import { GrClose } from "react-icons/gr";
+import { FaFileDownload, FaTimes } from 'react-icons/fa';
 
 export default function SearchResult({ number, name, image, area, category, recipeData }) {
   const { setSelectedRecipe, selectedRecipe } = useRecipe();
@@ -61,15 +60,6 @@ export default function SearchResult({ number, name, image, area, category, reci
     if (showModal && selectedRecipe) {
       fetchNutrition();
     }
-
-    if (showModal) {
-      document.body.style.position = 'fixed';
-    } else {
-      document.body.style.position = '';
-    }
-    return () => {
-      document.body.style.position = '';
-    };
   }, [showModal, selectedRecipe]);
 
   const totals = nutritionOrder.reduce((acc, key) => {
@@ -291,7 +281,7 @@ export default function SearchResult({ number, name, image, area, category, reci
                     onClick={() => setShowModal(false)}
                     className="btn btn-primary text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg"
                   >
-                    <GrClose />
+                    <FaTimes />
                   </button>
                 </div>
 

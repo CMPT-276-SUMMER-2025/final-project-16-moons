@@ -90,7 +90,7 @@ export default function Search() {
             return null
         } catch (error) {
             console.error('Error:', error.message)
-            setError('Failed to fetch recipes. Please try again.')
+            setError('Error: Failed to fetch recipes. Please try again.')
             setRecipes([])
         }
     }
@@ -123,7 +123,7 @@ export default function Search() {
     // This function is ran when the user enters their search or clicks the search button
     const handleSearch = async (searchType, query) => {
         setRecipes([])
-        setError(null)
+        setError('')
         setLoading(true)
 
         try {
@@ -138,7 +138,7 @@ export default function Search() {
             let formattedRecipes = formatRecipes(data)
 
             if (formattedRecipes.length === 0) {
-                setError('No recipes found. Try a different search term that is relevant to your chosen topic.')
+                setError('Error: No recipes found. Try a different search term.')
                 setRecipes([])
                 return
             }
@@ -150,11 +150,10 @@ export default function Search() {
             }
 
             setRecipes(formattedRecipes)
-
             console.log(formattedRecipes)
         } catch (error) {
             console.error('Error:', error.message)
-            setError('Failed to fetch recipes. Please try again.')
+            setError('Error: Failed to fetch recipes. Please try again.')
             setRecipes([])
         } finally {
             setLoading(false)
@@ -170,12 +169,12 @@ export default function Search() {
                 <p className="py-3">Don't worry! Search for tons of amazing recipes by area, name, category, or main ingredient.  </p>
                 <p className="py-3">You can get started by simply clicking on the search method you want to use, on the right.</p>
                 <p className="py-3">Once you're done searching, click on a recipe to see its detailed information!</p>
-                <div className="flex justify-center space-x-8 mt-auto">
+                <div className="flex space-x-8 mt-auto pl-35">
                     <img src={meat} alt="meat" className="w-15 h-15 object-cover rounded"/>
                     <img src={carrot} alt="carrot" className="w-15 h-15 object-cover rounded"/>
                     <img src={apple} alt="apple" className="w-15 h-15 object-cover rounded"/>
                 </div>
-                <div className="flex justify-center mt-4">
+                <div className="flex justify-start mt-4">
                     <img src={lines} alt="lines" className="w-130"/>
                 </div>
             </div>
@@ -194,13 +193,13 @@ export default function Search() {
                     <SearchHint searchType={searchType} />
 
                     {error && (
-                        <div className="bg-base-200 p-6 rounded-xl hover:bg-primary hover:text-white transition duration-300 hover:scale-102">
-                            {error}
+                        <div className="bg-base-200 p-6 rounded-xl shadow-lg">
+                            <h1 className="font-medium text-error">{error}</h1>
                         </div>
                     )}
 
                     {recipes.map((recipe, idx) => (
-                        <SearchResult key={idx} number={idx + 1} name={recipe.name} image={recipe.image}  recipeData={recipe} area={recipe.area} category={recipe.category} />
+                        <SearchResult key={idx} number={idx + 1} name={recipe.name} image={recipe.image} recipeData={recipe} area={recipe.area} category={recipe.category} />
                     ))}
 
                     {loading && (

@@ -13,13 +13,13 @@ function Navbar(){
                 <Link to="/">
                     <img src={logo} alt="logo" className="h-8 w-8 transition duration-300 hover:scale-115" />
                 </Link>
-                <Link to="/" className="text-white text-lg transition duration-300 hover:scale-115">
+                <Link to="/" className="text-white text-xl transition duration-300 hover:scale-115">
                     Recipedia
                 </Link>
             </div>
 
             <div className="flex-none">
-                <div className="menu menu-horizontal gap-6 text-lg text-primary-content">
+                <div className="menu menu-horizontal gap-6 text-xl text-primary-content">
                     <Link to="/" className={location.pathname === '/' ? 'transition duration-300 hover:scale-115 underline' : 'transition duration-300 hover:scale-120'}>
                     Home
                     </Link>

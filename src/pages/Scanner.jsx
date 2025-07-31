@@ -13,18 +13,48 @@ export default function Scanner() {
 
     const key = import.meta.env.VITE_API_NINJAS_KEY
 
+    const validateImage = (file) => {
+        const maxSize = 200000; // this is in bytes, equivalent to 200 kb
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
+        if (file.size > maxSize) {
+            throw new Error("Error: File size is too large. Please use a file smaller than 200 KB.");
+        }
+
+        if (!allowedTypes.includes(file.type.toLowerCase())) {
+            throw new Error("Error: Unsupported image format. Please either use jpeg, jpg, png, or webp.");
+        }
+    }
+
     const imageChange = (e) => {
-        setImage(e.target.files[0]);
-        setNutritionData([]);
-        setError("");
+        const selectedFile = e.target.files[0];
+
+        if (selectedFile) {
+            try {
+                validateImage(selectedFile);
+                setImage(selectedFile);
+                setNutritionData([])
+                setError('')
+            } catch (err) {
+                setError(err.message);
+                setImage(null);
+                e.target.value = '';
+            }
+        } else {
+            setImage(null);
+            setNutritionData([]);
+            setError('');
+        }
     };
 
     const handleAnalyse = async () => {
         setLoading(true);
-        setError("");
+        setError('');
         setNutritionData([]);
 
         try {
+            validateImage(image);
+
             const formData = new FormData();
             formData.append("image", image);
 
@@ -37,12 +67,18 @@ export default function Scanner() {
                 body: formData,
             });
 
-            if (!imageToText.ok) throw new Error("Error: Couldn't extract text.");
+            if (!imageToText.ok) {
+                const errorText = await imageToText.text();
+                console.error("Image to text error:", imageToText.status, errorText);
+                throw new Error("Error: Couldn't analyze text. Try an image with clearer text.");
+            }
 
             const textData = await imageToText.json();
             const fullText = textData.map((obj) => obj.text).join(" ").trim();
 
-            if (!fullText) throw new Error("Error: No text detected.");
+            if (!fullText) {
+                throw new Error("Error: No text detected in the image. Try an image with clearer text.");
+            }
 
             //text to nutrition
             const nutrition = await fetch(
@@ -56,13 +92,26 @@ export default function Scanner() {
 
             );
 
-            if (!nutrition.ok) throw new Error("Couldn't analyze nutritional info. Try another image with cleaner text font.");
+            if (!nutrition.ok) {
+                const errorText = await nutrition.text();
+                console.error("Text to nutrition error:", nutrition.status, errorText);
+                throw new Error("Error: Couldn't analyze nutritionial data. Try an image with clearer text.");
+            }
 
             const data = await nutrition.json();
+
+            if (!data || data.length === 0) {
+                throw new Error("Error: No nutritional information found. Try another image with clearer text.")
+            }
+
             setNutritionData(data);
         } catch (err) {
-            setError(err.message);
-            setError("Couldn't analyze nutritional info. Try another image with cleaner text font.");
+            console.error("Nutritional Analysis Error:", err);
+            if (!err.message || (err.message === "Failed to fetch")) {
+                setError("Error: An unexpected error occurred. Please try again.")
+            } else {
+                setError(err.message);
+            }
         } finally {
             setLoading(false);
         }
@@ -193,27 +242,28 @@ export default function Scanner() {
             <div className="w-[35%] text-left text-2xl flex flex-col">
                 <p className="py-3">Want to find out the nutrition facts of a menu, recipe, or food journal?</p>
                 <p className="py-3">Just upload a picture of it and watch the magic happen!</p>
-                <div className="py-15">
+                <div className="py-10">
+                    <p className="text-sm text-secondary-content">Max file size: 200 KB</p>
                     <input
                         type="file"
                         accept="image/*"
                         onChange={imageChange}
-                        className="file-input file-input-primary w-full rounded-full shadow-xl flex justify-center items-center"
-                        />
+                        className="mt-2 file-input file-input-primary w-[80%] rounded-full shadow-xl flex justify-center items-center"
+                    />
                     <button
-                        className="btn btn-primary mt-4 w-full rounded-full shadow-xl text-lg transition-all duration-300 hover:scale-105"
+                        className="btn btn-primary mt-6 w-[80%] rounded-full shadow-xl text-lg transition-all duration-300 hover:scale-105"
                         onClick={handleAnalyse}
                         disabled={!image}
                         >
                         Get Nutrition!
-                        </button>
+                    </button>
                 </div>
-                <div className="flex justify-center space-x-8 mt-auto">
+                <div className="flex space-x-8 mt-auto pl-35">
                     <img src={meat} alt="meat" className="w-15 h-15 object-cover rounded"/>
                     <img src={carrot} alt="carrot" className="w-15 h-15 object-cover rounded"/>
                     <img src={apple} alt="apple" className="w-15 h-15 object-cover rounded"/>
                 </div>
-                <div className="flex justify-center mt-4">
+                <div className="flex justify-start mt-4">
                     <img src={lines} alt="lines" className="w-130"/>
                 </div>
             </div>
@@ -229,14 +279,19 @@ export default function Scanner() {
                             <FaFileDownload /> Save as PDF
                         </button>
                     </div>
-                    {(nutritionData.length === 0) && !error && (
+                    {(nutritionData.length === 0) && !error && !image && (
                         <div className="bg-base-200 p-6 rounded-xl shadow-lg">
                             <h1>Looks like you haven't uploaded an image yet. Upload one on the left!</h1>
                         </div>
                     )}
+                    {(nutritionData.length === 0) && !error && image && (
+                        <div className="bg-base-200 p-6 rounded-xl shadow-lg">
+                            <h1>Looks like you haven't clicked the button yet. Click it on the left!</h1>
+                        </div>
+                    )}
                     {error && (
-                        <div className="bg-base-200 p-6 rounded-xl shadow-lg text-red">
-                            <h1>{error}</h1>
+                        <div className="bg-base-200 p-6 rounded-xl shadow-lg">
+                            <h1 className="font-medium text-error">{error}</h1>
                         </div>
                     )}
                     {loading && (
