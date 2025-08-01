@@ -109,49 +109,51 @@ export default function Scanner() {
     })
 
     return (
-        <div className="flex flex-row justify-center px-20 py-10 space-x-20 h-200">
-            <div className={`w-[35%] text-left text-3xl flex flex-col transition ${isVisible ? 'opacity-100 translate-y-0 delay-100' : 'opacity-0 translate-y-10'}`}>
-                <p className="pb-3">Don't know what you want to eat today?</p>
-                <p className="py-3">Can't settle on a recipe?</p>
-                <p className="py-3">Let us do the work for you!</p>
-                <div className="py-10">
-                    <button
-                        className="mt-2 btn btn-primary w-[80%] rounded-full shadow-xl text-lg transition-all duration-300 hover:scale-105"
-                        onClick={handleGeneration}
-                        disabled={loading}
-                        >
-                        Surprise Me!
-                    </button>
-                </div>
-                <Horizontal />
-            </div>
-            <div className="flex flex-col w-[40%] gap-6">
-                <div className="bg-white p-6 rounded-xl shadow-2xl max-h-full flex-1 space-y-5 overflow-y-auto">
-                    <div className="flex flex-row justify-between">
-                        <div className="space-y-6 w-full">
-                            {recipes.map((recipe, idx) => (
-                                <div key={idx}>
-                                    <RandomRecipe key={idx} number={idx + 1} name={recipe.name} image={recipe.image} recipeData={recipe} area={recipe.area} category={recipe.category} />
-                                </div>
-                            ))}
-                        </div>
+        <div className="h-screen">
+            <div className="flex flex-row justify-center px-20 py-10 space-x-20 h-200 flex-1">
+                <div className={`w-[35%] text-left text-3xl flex flex-col transition ${isVisible ? 'opacity-100 translate-y-0 delay-100' : 'opacity-0 translate-y-10'}`}>
+                    <p className="pb-3">Don't know what you want to eat today?</p>
+                    <p className="py-3">Can't settle on a recipe?</p>
+                    <p className="py-3">Let us do the work for you!</p>
+                    <div className="py-10">
+                        <button
+                            className="mt-2 btn btn-primary w-[80%] rounded-full shadow-xl text-lg transition-all duration-300 hover:scale-105"
+                            onClick={handleGeneration}
+                            disabled={loading}
+                            >
+                            Surprise Me!
+                        </button>
                     </div>
-                    {recipes.length === 0 && !error && count === 0 && (
-                        <div className={`bg-base-200 p-6 rounded-xl shadow-lg transition ${isVisible ? 'opacity-100 translate-y-0 delay-100' : 'opacity-0 translate-y-10'}`}>
-                            <h1>Looks like you haven't clicked the button yet. Click it on the left!</h1>
+                    <Horizontal />
+                </div>
+                <div className="flex flex-col w-[40%] gap-6">
+                    <div className="bg-white p-6 rounded-xl shadow-2xl max-h-full flex-1 space-y-5 overflow-y-auto">
+                        <div className="flex flex-row justify-between">
+                            <div className="space-y-6 w-full">
+                                {recipes.map((recipe, idx) => (
+                                    <div key={idx}>
+                                        <RandomRecipe key={idx} number={idx + 1} name={recipe.name} image={recipe.image} recipeData={recipe} area={recipe.area} category={recipe.category} />
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    )}
-                    {error && (
-                        <div className="bg-base-200 p-6 rounded-xl shadow-lg">
-                            <h1 className="font-medium text-error">{error}</h1>
-                        </div>
-                    )}
-                    {loading && (
-                        <div className="flex flex-row space-x-5">
-                            <p className="text-2xl">Fetching recipes, hang tight!</p>
-                            <span className="loading loading-spinner text-primary loading-xl"></span>
-                        </div>
-                    )}
+                        {recipes.length === 0 && !error && count === 0 && (
+                            <div className={`bg-base-200 p-6 rounded-xl shadow-lg transition ${isVisible ? 'opacity-100 translate-y-0 delay-100' : 'opacity-0 translate-y-10'}`}>
+                                <h1>Looks like you haven't clicked the button yet. Click it on the left!</h1>
+                            </div>
+                        )}
+                        {error && (
+                            <div className="bg-base-200 p-6 rounded-xl shadow-lg">
+                                <h1 className="font-medium text-error">{error}</h1>
+                            </div>
+                        )}
+                        {loading && (
+                            <div className="flex flex-row space-x-5">
+                                <p className="text-2xl">Fetching recipes, hang tight!</p>
+                                <span className="loading loading-spinner text-primary loading-xl"></span>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
