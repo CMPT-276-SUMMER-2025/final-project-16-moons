@@ -51,20 +51,9 @@ export default function Search() {
         return ingredients
     }
 
-    // Check if a recipe has all the required data
-    const isRecipeComplete = (meal) => {
-        return (
-            meal.strMeal && meal.strMeal.trim() &&
-            meal.strMealThumb && meal.strMealThumb.trim() &&
-            meal.strCategory && meal.strCategory.trim() &&
-            meal.strArea && meal.strArea.trim()
-        )
-    }
-
     // Format the recipes to have name, image, instructions, and ingredients
     const formatRecipes = (data) => {
         return data.meals
-            .filter(meal => isRecipeComplete(meal))
             .map(meal => ({
                 name: meal.strMeal,
                 image: meal.strMealThumb,
@@ -96,8 +85,7 @@ export default function Search() {
             return null
         } catch (error) {
             console.error('Error:', error.message)
-            setError('Error: Failed to fetch recipes. Please try again.')
-            setRecipes([])
+            return null
         }
     }
 
@@ -118,8 +106,12 @@ export default function Search() {
                         area: data.strArea
                     }
 
-                    updatedRecipes.push(updatedRecipe)
+                    if (updatedRecipe.name && updatedRecipe.image && updatedRecipe.category && updatedRecipe.area) {
+                        updatedRecipes.push(updatedRecipe)
+                    }
                 }
+            } else {
+                updatedRecipes.push(recipe)
             }
         }
 
@@ -156,7 +148,6 @@ export default function Search() {
             }
 
             setRecipes(formattedRecipes)
-            console.log(formattedRecipes)
         } catch (error) {
             console.error('Error:', error.message)
             setError('Error: Failed to fetch recipes. Please try again.')
@@ -180,7 +171,7 @@ export default function Search() {
                 <p className="pb-3">Only remember part of the name of a recipe?</p>
                 <p className="py-3">Don't know what you can make with your ingredients?</p>
                 <p className="py-3">Want to try something different?</p>
-                <p className="py-3">Don't worry! Search for tons of amazing recipes by area, name, category, or main ingredient.  </p>
+                <p className="py-3">Don't worry! Search for tons of amazing recipes by area, name, category, or main ingredient.</p>
                 <p className="py-3">You can get started by simply clicking on the search method you want to use, on the right.</p>
                 <p className="py-3">Once you're done searching, click on a recipe to see its detailed information!</p>
                 <Horizontal />
