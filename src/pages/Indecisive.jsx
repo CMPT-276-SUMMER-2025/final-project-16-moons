@@ -5,7 +5,7 @@ import carrot from '../assets/icons/carrot.png'
 import lines from '../assets/images/linesHorizontal.png'
 import RandomRecipe from '../components/Search/SearchResult'
 
-export default function Scanner() {
+export default function Indecisive() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
     const [recipes, setRecipes] = useState([])
