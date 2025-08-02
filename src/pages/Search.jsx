@@ -1,8 +1,5 @@
-import { useState } from "react";
-import meat from '../assets/icons/meat.png'
-import apple from '../assets/icons/apple.png'
-import carrot from '../assets/icons/carrot.png'
-import lines from '../assets/images/linesHorizontal.png'
+import { useState, useEffect } from "react";
+import Horizontal from '../components/Designs/Horizontal'
 import SearchResult from '../components/Search/SearchResult'
 import SearchHint from '../components/Search/SearchHint'
 import SearchTopic from '../components/Search/SearchTopic'
@@ -13,6 +10,7 @@ export default function Search() {
     const [recipes, setRecipes] = useState([])
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
+    const [isVisible, setIsVisible] = useState(false)
 
     // Get the endpoint for the topic the user has chosen
     // i.e., area, name, category, or main ingredient
@@ -55,18 +53,15 @@ export default function Search() {
 
     // Format the recipes to have name, image, instructions, and ingredients
     const formatRecipes = (data) => {
-        if (!data || !data.meals) {
-            return []
-        }
-
-        return data.meals.map(meal => ({
-            name: meal.strMeal,
-            image: meal.strMealThumb,
-            category: meal.strCategory,
-            area: meal.strArea,
-            instructions: meal.strInstructions,
-            ingredients: formatIngredients(meal)
-        }))
+        return data.meals
+            .map(meal => ({
+                name: meal.strMeal,
+                image: meal.strMealThumb,
+                category: meal.strCategory,
+                area: meal.strArea,
+                instructions: meal.strInstructions,
+                ingredients: formatIngredients(meal)
+            }))
     }
 
     // In the case where the user chooses area, category, or main ingredient, this function is ran
@@ -90,8 +85,7 @@ export default function Search() {
             return null
         } catch (error) {
             console.error('Error:', error.message)
-            setError('Error: Failed to fetch recipes. Please try again.')
-            setRecipes([])
+            return null
         }
     }
 
@@ -112,8 +106,12 @@ export default function Search() {
                         area: data.strArea
                     }
 
-                    updatedRecipes.push(updatedRecipe)
+                    if (updatedRecipe.name && updatedRecipe.image && updatedRecipe.category && updatedRecipe.area) {
+                        updatedRecipes.push(updatedRecipe)
+                    }
                 }
+            } else {
+                updatedRecipes.push(recipe)
             }
         }
 
@@ -150,7 +148,6 @@ export default function Search() {
             }
 
             setRecipes(formattedRecipes)
-            console.log(formattedRecipes)
         } catch (error) {
             console.error('Error:', error.message)
             setError('Error: Failed to fetch recipes. Please try again.')
@@ -160,54 +157,57 @@ export default function Search() {
         }
     }
 
+    useEffect(() => {
+        const showTimeout = setTimeout(() => setIsVisible(true), 300)
+
+        return () => {
+            clearTimeout(showTimeout);
+        }
+    })
+
     return(
-        <div className="flex flex-row justify-center px-20 py-10 space-x-20 h-200">
-            <div className="w-[35%] text-left text-2xl flex flex-col">
-                <p className="py-3">Only remember part of the name of a recipe?</p>
-                <p className="py-3">Don't know what you can make with your ingredients?</p>
-                <p className="py-3">Want to try something different?</p>
-                <p className="py-3">Don't worry! Search for tons of amazing recipes by area, name, category, or main ingredient.  </p>
-                <p className="py-3">You can get started by simply clicking on the search method you want to use, on the right.</p>
-                <p className="py-3">Once you're done searching, click on a recipe to see its detailed information!</p>
-                <div className="flex space-x-8 mt-auto pl-35">
-                    <img src={meat} alt="meat" className="w-15 h-15 object-cover rounded"/>
-                    <img src={carrot} alt="carrot" className="w-15 h-15 object-cover rounded"/>
-                    <img src={apple} alt="apple" className="w-15 h-15 object-cover rounded"/>
+        <div className="h-screen">
+            <div className="flex flex-row justify-center px-20 py-10 space-x-20 h-200 flex-1">
+                <div className={`w-[35%] text-left text-3xl flex flex-col transition ${isVisible ? 'opacity-100 translate-y-0 delay-100' : 'opacity-0 translate-y-10'}`}>
+                    <p className="pb-3">Only remember part of the name of a recipe?</p>
+                    <p className="py-3">Don't know what you can make with your ingredients?</p>
+                    <p className="py-3">Want to try something different?</p>
+                    <p className="py-3">Don't worry! Search for tons of amazing recipes by area, name, category, or main ingredient.</p>
+                    <p className="py-3">You can get started by simply clicking on the search method you want to use, on the right.</p>
+                    <p className="py-3">Once you're done searching, click on a recipe to see its detailed information!</p>
+                    <Horizontal />
                 </div>
-                <div className="flex justify-start mt-4">
-                    <img src={lines} alt="lines" className="w-130"/>
-                </div>
-            </div>
-            <div className="flex flex-col w-[40%] gap-6">
-                <SearchTopic
-                    onSearch={handleSearch}
-                    searchType={searchType}
-                    setSearchType={setSearchType}
-                    inputText={inputText}
-                    setInputText={setInputText}
-                    setError={setError}
-                    setRecipes={setRecipes}
-                />
+                <div className="flex flex-col w-[40%] gap-6">
+                    <SearchTopic
+                        onSearch={handleSearch}
+                        searchType={searchType}
+                        setSearchType={setSearchType}
+                        inputText={inputText}
+                        setInputText={setInputText}
+                        setError={setError}
+                        setRecipes={setRecipes}
+                    />
 
-                <div className="bg-white p-6 rounded-xl shadow-2xl max-h-full flex-1 space-y-5 overflow-y-auto">
-                    <SearchHint searchType={searchType} />
+                    <div className="bg-white p-6 rounded-xl shadow-2xl max-h-full flex-1 space-y-5 overflow-y-auto transition">
+                        <SearchHint searchType={searchType} />
 
-                    {error && (
-                        <div className="bg-base-200 p-6 rounded-xl shadow-lg">
-                            <h1 className="font-medium text-error">{error}</h1>
-                        </div>
-                    )}
+                        {error && (
+                            <div className="bg-base-200 p-6 rounded-xl shadow-lg">
+                                <h1 className="font-medium text-error">{error}</h1>
+                            </div>
+                        )}
 
-                    {recipes.map((recipe, idx) => (
-                        <SearchResult key={idx} number={idx + 1} name={recipe.name} image={recipe.image} recipeData={recipe} area={recipe.area} category={recipe.category} />
-                    ))}
+                        {recipes.map((recipe, idx) => (
+                            <SearchResult key={idx} number={idx + 1} name={recipe.name} image={recipe.image} recipeData={recipe} area={recipe.area} category={recipe.category} />
+                        ))}
 
-                    {loading && (
-                        <div className="flex flex-row space-x-5">
-                            <p className="text-2xl">Fetching recipes, hang tight!</p>
-                            <span className="loading loading-spinner text-primary loading-xl"></span>
-                        </div>
-                    )}
+                        {loading && (
+                            <div className="flex flex-row space-x-5">
+                                <p className="text-2xl">Fetching recipes, hang tight!</p>
+                                <span className="loading loading-spinner text-primary loading-xl"></span>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

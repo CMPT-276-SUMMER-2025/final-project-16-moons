@@ -12,10 +12,10 @@ export default function Footer() {
                     <div className="grid lg:grid-cols-2 gap-3">
                         {/* logo column */}
                         <div className="flex items-center space-x-5 pl-120">
-                            <Link to="/">
+                            <Link to="/" onClick={() => {window.scrollTo({ top: 0, behavior: 'smooth' })}}>
                                 <img src={logo} alt="Recipedia Logo" className="w-13 h-13 transition duration-300 hover:scale-110"/>
                             </Link>
-                            <Link to="/" className="text-4xl text-base-content transition duration-300 hover:scale-110">Recipedia</Link>
+                            <Link to="/" onClick={() => {window.scrollTo({ top: 0, behavior: 'smooth' })}} className="text-4xl text-base-content transition duration-300 hover:scale-110">Recipedia</Link>
                         </div>
 
                         {/* Two footer links columns */}
@@ -25,7 +25,15 @@ export default function Footer() {
                                 <ul className="space-y-1">
                                     {featuresLinks.map((link, index) => (
                                         <li key={index}>
-                                            <a className="text-lg text-secondary-content hover:text-base-content underline" href={link.href}>{link.text}</a>
+                                            <a
+                                                className="text-lg text-secondary-content hover:text-base-content underline"
+                                                onClick={() => {
+                                                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                                                }}
+                                                href={link.href}
+                                            >
+                                                {link.text}
+                                            </a>
                                         </li>
                                     ))}
                                 </ul>
@@ -35,7 +43,15 @@ export default function Footer() {
                                 <ul className="space-y-1">
                                     {aboutUsLinks.map((link, index) => (
                                         <li key={index}>
-                                            <a className="text-lg text-secondary-content hover:text-base-content underline" href={link.href}>{link.text}</a>
+                                            <a
+                                                className="text-lg text-secondary-content hover:text-base-content underline"
+                                                onClick={() => {
+                                                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                                                }}
+                                                href={link.href}
+                                            >
+                                                {link.text}
+                                            </a>
                                         </li>
                                     ))}
                                 </ul>

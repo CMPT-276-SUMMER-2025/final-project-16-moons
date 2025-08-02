@@ -9,6 +9,4 @@ export const featuresLinks = [
 
 export const aboutUsLinks = [
     { href: "#/contact", text: "Contact"},
-    { href: "#", text: "Recipedia"},
-    { href: "#", text: "The Team"},
 ];
