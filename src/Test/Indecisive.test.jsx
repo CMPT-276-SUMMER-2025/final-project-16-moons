@@ -1,7 +1,7 @@
 // src/Test/Scanner.test.jsx
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import Scanner from '../pages/Indecisive'
+import Indecisive from '../pages/Indecisive'
 
 // Mock the recipe‐context hook so SearchResult won’t crash
 vi.mock('../Hooks/UseRecipe', () => ({
@@ -37,7 +37,7 @@ describe('Scanner component', () => {
   })
 
   test('fetches 3 recipes on click and displays them', async () => {
-    render(<Scanner />)
+    render(<Indecisive />)
 
     // initial prompt
     expect(
@@ -65,7 +65,7 @@ describe('Scanner component', () => {
       Promise.resolve({ ok: false, status: 500 })
     )
 
-    render(<Scanner />)
+    render(<Indecisive />)
     await userEvent.click(
       screen.getByRole('button', { name: /surprise me/i })
     )
