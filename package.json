@@ -8,7 +8,9 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "node server.cjs"
+    "start": "node server.cjs",
+    "test": "vitest",
+    "test:watch": "vitest watch"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.10",
