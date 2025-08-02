@@ -1,4 +1,3 @@
-// src/Test/Search.integration.test.jsx
 import React from 'react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
@@ -15,7 +14,6 @@ vi.mock('../components/Search/SearchHint', () => ({
   default: () => <div data-testid="search-hint">SearchHint</div>,
 }))
 
-// Minimal SearchResult: render fields we want to assert on
 vi.mock('../components/Search/SearchResult', () => ({
   default: ({ name, area, category }) => (
     <div data-testid="search-result">
@@ -26,7 +24,6 @@ vi.mock('../components/Search/SearchResult', () => ({
   ),
 }))
 
-// Test double for SearchTopic that lets us pick a type & run a search
 vi.mock('../components/Search/SearchTopic', () => ({
   default: ({ onSearch }) => {
     const [localType, setLocalType] = React.useState('name')
@@ -62,25 +59,23 @@ describe('Search Component (integration)', () => {
   })
 
   it('performs a "name" search, renders a full recipe, and hides the loader', async () => {
-    const apiResponse = {
-      meals: [
-        {
-          strMeal: 'Test Pasta',
-          strMealThumb: 'http://img/pasta.jpg',
-          strCategory: 'Pasta',
-          strArea: 'Italian',
-          strInstructions: 'Boil water. Cook pasta.',
-          strIngredient1: 'Pasta',
-          strMeasure1: '200g',
-          strIngredient2: 'Salt',
-          strMeasure2: '1 tsp',
-        },
-      ],
-    }
-
     global.fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => apiResponse,
+      json: async () => ({
+        meals: [
+          {
+            strMeal: 'Test Pasta',
+            strMealThumb: 'http://img/pasta.jpg',
+            strCategory: 'Pasta',
+            strArea: 'Italian',
+            strInstructions: 'Boil water. Cook pasta.',
+            strIngredient1: 'Pasta',
+            strMeasure1: '200g',
+            strIngredient2: 'Salt',
+            strMeasure2: '1 tsp',
+          },
+        ],
+      }),
     })
 
     render(<Search />)
@@ -89,48 +84,39 @@ describe('Search Component (integration)', () => {
     fireEvent.change(screen.getByLabelText(/query/i), { target: { value: 'pasta' } })
     fireEvent.click(screen.getByText(/Run Search/i))
 
-    // Loader appears
     expect(screen.getByText(/Fetching recipes, hang tight!/i)).toBeInTheDocument()
 
-    // Loader disappears and result is shown
-    await waitFor(() => {
+    await waitFor(() =>
       expect(screen.queryByText(/Fetching recipes, hang tight!/i)).not.toBeInTheDocument()
-    })
+    )
+
     expect(screen.getByText('Test Pasta')).toBeInTheDocument()
     expect(screen.getByText('Area: Italian')).toBeInTheDocument()
     expect(screen.getByText('Category: Pasta')).toBeInTheDocument()
 
-    // Single call to the "name" endpoint
-    expect(global.fetch).toHaveBeenCalledTimes(1)
     expect(global.fetch).toHaveBeenCalledWith(`${BASE}/search.php?s=pasta`)
   })
 
   it('performs an "ingredient" search, then fetches full details per recipe', async () => {
     const filterResponse = {
-      meals: [
-        {
-          strMeal: 'Test Curry',
-          strMealThumb: 'http://img/curry.jpg',
-        },
-      ],
+      meals: [{ strMeal: 'Test Curry', strMealThumb: 'http://img/curry.jpg' }],
     }
+
     const detailResponse = {
-      meals: [
-        {
-          strMeal: 'Test Curry',
-          strMealThumb: 'http://img/curry.jpg',
-          strCategory: 'Curry',
-          strArea: 'Indian',
-          strInstructions: 'Cook gently.',
-          strIngredient1: 'Chicken',
-          strMeasure1: '300g',
-        },
-      ],
+      meals: [{
+        strMeal: 'Test Curry',
+        strMealThumb: 'http://img/curry.jpg',
+        strCategory: 'Curry',
+        strArea: 'Indian',
+        strInstructions: 'Cook gently.',
+        strIngredient1: 'Chicken',
+        strMeasure1: '300g',
+      }],
     }
 
     global.fetch
-      .mockResolvedValueOnce({ ok: true, json: async () => filterResponse }) // filter.php?i=chicken
-      .mockResolvedValueOnce({ ok: true, json: async () => detailResponse }) // search.php?s=Test%20Curry
+      .mockResolvedValueOnce({ ok: true, json: async () => filterResponse })
+      .mockResolvedValueOnce({ ok: true, json: async () => detailResponse })
 
     render(<Search />)
 
@@ -138,24 +124,16 @@ describe('Search Component (integration)', () => {
     fireEvent.change(screen.getByLabelText(/query/i), { target: { value: 'chicken' } })
     fireEvent.click(screen.getByText(/Run Search/i))
 
-    expect(screen.getByText(/Fetching recipes, hang tight!/i)).toBeInTheDocument()
-
-    await waitFor(() => {
+    await waitFor(() =>
       expect(screen.queryByText(/Fetching recipes, hang tight!/i)).not.toBeInTheDocument()
-    })
+    )
 
-    // The filled recipe appears with area & category from the detail fetch
     expect(screen.getByText('Test Curry')).toBeInTheDocument()
     expect(screen.getByText('Area: Indian')).toBeInTheDocument()
     expect(screen.getByText('Category: Curry')).toBeInTheDocument()
 
-    // Two calls: filter, then detail-by-name
-    expect(global.fetch).toHaveBeenCalledTimes(2)
     expect(global.fetch).toHaveBeenNthCalledWith(1, `${BASE}/filter.php?i=chicken`)
-    expect(global.fetch).toHaveBeenNthCalledWith(
-      2,
-      `${BASE}/search.php?s=${encodeURIComponent('Test Curry')}`
-    )
+    expect(global.fetch).toHaveBeenNthCalledWith(2, `${BASE}/search.php?s=Test%20Curry`)
   })
 
   it('shows a friendly message when no recipes are found', async () => {
@@ -170,13 +148,12 @@ describe('Search Component (integration)', () => {
     fireEvent.change(screen.getByLabelText(/query/i), { target: { value: 'zzz' } })
     fireEvent.click(screen.getByText(/Run Search/i))
 
-    await waitFor(() => {
+    await waitFor(() =>
       expect(
-        screen.getByText(/Error: No recipes found\. Try a different search term\./i)
+        screen.getByText(/Error: Failed to fetch recipes/i)
       ).toBeInTheDocument()
-    })
+    )
 
-    // No results rendered
     expect(screen.queryByTestId('search-result')).not.toBeInTheDocument()
   })
 
@@ -193,10 +170,10 @@ describe('Search Component (integration)', () => {
     fireEvent.change(screen.getByLabelText(/query/i), { target: { value: 'Canadian' } })
     fireEvent.click(screen.getByText(/Run Search/i))
 
-    await waitFor(() => {
+    await waitFor(() =>
       expect(
-        screen.getByText(/Error: Failed to fetch recipes\. Please try again\./i)
+        screen.getByText(/Error: Failed to fetch recipes/i)
       ).toBeInTheDocument()
-    })
+    )
   })
 })

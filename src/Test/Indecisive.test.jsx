@@ -38,25 +38,22 @@ describe('Scanner component', () => {
   test('fetches 3 recipes on click and displays them', async () => {
     render(<Indecisive />)
 
-    // initial prompt
+    // Verify initial prompt is on screen
     expect(
       screen.getByText(/don't know what you want to eat today\?/i)
     ).toBeInTheDocument()
 
-    // click the button
+    // Simulate click on "Surprise Me!" button
     await userEvent.click(
       screen.getByRole('button', { name: /surprise me/i })
     )
 
-    // wait for the first heading to appear
-    await screen.findByRole('heading', { name: 'Breakfast' })
+    // Wait for any heading with "Test Meal" to appear
+    const headings = await screen.findAllByRole('heading', { name: /test meal/i })
+    expect(headings).toHaveLength(3)
 
-    // verify fetch was called 3 times
+    // Confirm fetch was called 3 times
     expect(global.fetch).toHaveBeenCalledTimes(3)
-
-    // now assert that "Test Meal" appears in each card
-    const meals = screen.getAllByText(/Test Meal/i)
-    expect(meals).toHaveLength(3)
   })
 
   test('displays error message on fetch failure', async () => {
@@ -65,6 +62,7 @@ describe('Scanner component', () => {
     )
 
     render(<Indecisive />)
+
     await userEvent.click(
       screen.getByRole('button', { name: /surprise me/i })
     )

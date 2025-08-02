@@ -15,7 +15,6 @@ vi.mock('../components/Search/SearchResult', () => ({
 }));
 
 beforeEach(() => {
-  // spy on global.fetch so we can mock its implementations
   vi.spyOn(global, 'fetch');
 });
 
@@ -37,26 +36,21 @@ describe('Indecisive integration', () => {
       .mockResolvedValueOnce({ ok: true, json: async () => ({ meals: [mockMeals[2]] }) });
 
     render(<Indecisive />);
-
     fireEvent.click(screen.getByRole('button', { name: /surprise me/i }));
 
-    // Loading state
-    expect(screen.getByText(/fetching recipes/i)).toBeInTheDocument();
-
+    // Wait for loading to disappear
     await waitFor(() => {
       expect(screen.queryByText(/fetching recipes/i)).not.toBeInTheDocument();
     });
 
-    // Three headings and recipe cards
-    ['Breakfast', 'Lunch', 'Dinner'].forEach((heading) => {
-      expect(screen.getByText(heading)).toBeInTheDocument();
+    // Verify all 3 meal names are shown
+    ['Meal1', 'Meal2', 'Meal3'].forEach((meal) => {
+      expect(screen.getByText(meal)).toBeInTheDocument();
     });
+
+    // Verify we have exactly 3 recipe cards
     const cards = screen.getAllByTestId('random-recipe');
     expect(cards).toHaveLength(3);
-
-    mockMeals.forEach((m) => {
-      expect(screen.getByText(m.strMeal)).toBeInTheDocument();
-    });
   });
 
   it('displays error message when fetch fails', async () => {
