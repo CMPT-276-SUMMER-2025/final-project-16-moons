@@ -244,93 +244,91 @@ export default function Scanner() {
     };
 
     return (
-        <div className="h-screen">
-            <div className="flex flex-row justify-center px-20 py-10 space-x-20 h-200 flex-1">
-                <div className={`w-[35%] text-left text-3xl flex flex-col transition ${isVisible ? 'opacity-100 translate-y-0 delay-100' : 'opacity-0 translate-y-10'}`}>
-                    <p className="pb-3">Want to find out the nutrition facts of a menu, recipe, or food journal?</p>
-                    <p className="py-3">Just upload a picture of it and watch the magic happen!</p>
-                    <div className="py-10">
-                        <p className="text-sm text-secondary-content">Max file size: 200 KB</p>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={imageChange}
-                            className="mt-2 file-input file-input-primary w-[80%] rounded-full shadow-xl flex justify-center items-center"
-                        />
+        <div className="flex flex-row justify-center px-20 py-10 space-x-20 h-200">
+            <div className={`w-[35%] text-left text-3xl flex flex-col transition ${isVisible ? 'opacity-100 translate-y-0 delay-100' : 'opacity-0 translate-y-10'}`}>
+                <p className="pb-3">Want to find out the nutrition facts of a menu, recipe, or food journal?</p>
+                <p className="py-3">Just upload a picture of it and watch the magic happen!</p>
+                <div className="py-10">
+                    <p className="text-sm text-secondary-content">Max file size: 200 KB</p>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={imageChange}
+                        className="mt-2 file-input file-input-primary w-[80%] rounded-full shadow-xl flex justify-center items-center"
+                    />
+                    <button
+                        className="btn btn-primary mt-6 w-[80%] rounded-full shadow-xl text-lg transition-all duration-300 hover:scale-105"
+                        onClick={handleAnalyse}
+                        disabled={!image}
+                        >
+                        Get Nutrition!
+                    </button>
+                </div>
+                <Horizontal />
+            </div>
+            <div className="flex flex-col w-[40%] gap-6">
+                <div className={`bg-white p-6 rounded-xl shadow-2xl max-h-full flex-1 space-y-5 overflow-y-auto transition ${isVisible ? 'opacity-100 translate-y-0 delay-100' : 'opacity-0 translate-y-10'}`}>
+                    <div className="flex flex-row justify-between">
+                        <h1 className={`text-3xl mb-2 transition ${isVisible ? 'opacity-100 translate-y-0 delay-300' : 'opacity-0 translate-y-10'}`}>Nutrition Analysis</h1>
                         <button
-                            className="btn btn-primary mt-6 w-[80%] rounded-full shadow-xl text-lg transition-all duration-300 hover:scale-105"
-                            onClick={handleAnalyse}
-                            disabled={!image}
-                            >
-                            Get Nutrition!
+                            onClick={generatePDF}
+                            className={`btn btn-primary text-white px-6 py-2.5 rounded-full flex items-center duration-300 hover:scale-110 shadow-lg transition ${isVisible ? 'opacity-100 translate-y-0 delay-300' : 'opacity-0 translate-y-10'}`}
+                            disabled={nutritionData.length === 0}
+                        >
+                            <FaFileDownload /> Save as PDF
                         </button>
                     </div>
-                    <Horizontal />
-                </div>
-                <div className="flex flex-col w-[40%] gap-6">
-                    <div className={`bg-white p-6 rounded-xl shadow-2xl max-h-full flex-1 space-y-5 overflow-y-auto transition ${isVisible ? 'opacity-100 translate-y-0 delay-100' : 'opacity-0 translate-y-10'}`}>
-                        <div className="flex flex-row justify-between">
-                            <h1 className={`text-3xl mb-2 transition ${isVisible ? 'opacity-100 translate-y-0 delay-300' : 'opacity-0 translate-y-10'}`}>Nutrition Analysis</h1>
-                            <button
-                                onClick={generatePDF}
-                                className={`btn btn-primary text-white px-6 py-2.5 rounded-full flex items-center duration-300 hover:scale-110 shadow-lg transition ${isVisible ? 'opacity-100 translate-y-0 delay-300' : 'opacity-0 translate-y-10'}`}
-                                disabled={nutritionData.length === 0}
-                            >
-                                <FaFileDownload /> Save as PDF
-                            </button>
+                    {(nutritionData.length === 0) && !error && !image && (
+                        <div className={`bg-base-200 p-6 rounded-xl shadow-lg transition ${isVisible ? 'opacity-100 translate-y-0 delay-500' : 'opacity-0 translate-y-10'}`}>
+                            <h1>Looks like you haven't uploaded an image yet. Upload one on the left!</h1>
                         </div>
-                        {(nutritionData.length === 0) && !error && !image && (
-                            <div className={`bg-base-200 p-6 rounded-xl shadow-lg transition ${isVisible ? 'opacity-100 translate-y-0 delay-500' : 'opacity-0 translate-y-10'}`}>
-                                <h1>Looks like you haven't uploaded an image yet. Upload one on the left!</h1>
-                            </div>
-                        )}
-                        {(nutritionData.length === 0) && !error && image && (
-                            <div className="bg-base-200 p-6 rounded-xl shadow-lg">
-                                <h1>Looks like you haven't clicked the button yet. Click it on the left!</h1>
-                            </div>
-                        )}
-                        {error && (
-                            <div className="bg-base-200 p-6 rounded-xl shadow-lg">
-                                <h1 className="font-medium text-error">{error}</h1>
-                            </div>
-                        )}
-                        {loading && (
-                            <div className="flex flex-row space-x-5">
-                                <p className="text-2xl">Analyzing nutritional info, hang tight!</p>
-                                <span className="loading loading-spinner text-primary loading-xl"></span>
-                            </div>
-                        )}
-                        {nutritionData && nutritionData.length > 0 && (
-                            <div className="mt-6">
-                            <ul className="space-y-2">
-                                {nutritionData.map((item, idx) => (
-                                <li key={idx} className="p-4 bg-base-200 rounded-xl text-secondary-content">
-                                    <p className="font-medium text-black text-lg">{item.name}</p>
-                                    <ul className="list-disc pl-6 mt-2 space-y-1">
-                                        <li><span className="font-medium">Fat:</span> {item.fat_total_g} g</li>
-                                        <li><span className="font-medium">Saturated Fat:</span> {item.fat_saturated_g} g</li>
-                                        <li><span className="font-medium">Sodium:</span> {item.sodium_mg} mg</li>
-                                        <li><span className="font-medium">Potassium:</span> {item.potassium_mg} mg</li>
-                                        <li><span className="font-medium">Cholesterol:</span> {item.cholesterol_mg} mg</li>
-                                        <li><span className="font-medium">Carbs:</span> {item.carbohydrates_total_g} g</li>
-                                        <li><span className="font-medium">Fibre:</span> {item.fiber_g} g</li>
-                                        <li><span className="font-medium">Sugar:</span> {item.sugar_g} g</li>
-                                    </ul>
-                                    <div className="mt-2">
-                                        <span className="font-medium">Estimated Calories: </span> {
-                                            (
-                                                (item.fat_total_g || 0) * 9 +
-                                                (Math.max((item.carbohydrates_total_g || 0) - (item.fiber_g || 0), 0)) * 4 +
-                                                (item.fiber_g || 0) * 2
-                                                ).toFixed(0)
-                                            } kcal
-                                    </div>
-                                </li>
-                                ))}
-                            </ul>
-                            </div>
-                        )}
-                    </div>
+                    )}
+                    {(nutritionData.length === 0) && !error && image && (
+                        <div className="bg-base-200 p-6 rounded-xl shadow-lg">
+                            <h1>Looks like you haven't clicked the button yet. Click it on the left!</h1>
+                        </div>
+                    )}
+                    {error && (
+                        <div className="bg-base-200 p-6 rounded-xl shadow-lg">
+                            <h1 className="font-medium text-error">{error}</h1>
+                        </div>
+                    )}
+                    {loading && (
+                        <div className="flex flex-row space-x-5">
+                            <p className="text-2xl">Analyzing nutritional info, hang tight!</p>
+                            <span className="loading loading-spinner text-primary loading-xl"></span>
+                        </div>
+                    )}
+                    {nutritionData && nutritionData.length > 0 && (
+                        <div className="mt-6">
+                        <ul className="space-y-2">
+                            {nutritionData.map((item, idx) => (
+                            <li key={idx} className="p-4 bg-base-200 rounded-xl text-secondary-content">
+                                <p className="font-medium text-black text-lg">{item.name}</p>
+                                <ul className="list-disc pl-6 mt-2 space-y-1">
+                                    <li><span className="font-medium">Fat:</span> {item.fat_total_g} g</li>
+                                    <li><span className="font-medium">Saturated Fat:</span> {item.fat_saturated_g} g</li>
+                                    <li><span className="font-medium">Sodium:</span> {item.sodium_mg} mg</li>
+                                    <li><span className="font-medium">Potassium:</span> {item.potassium_mg} mg</li>
+                                    <li><span className="font-medium">Cholesterol:</span> {item.cholesterol_mg} mg</li>
+                                    <li><span className="font-medium">Carbs:</span> {item.carbohydrates_total_g} g</li>
+                                    <li><span className="font-medium">Fibre:</span> {item.fiber_g} g</li>
+                                    <li><span className="font-medium">Sugar:</span> {item.sugar_g} g</li>
+                                </ul>
+                                <div className="mt-2">
+                                    <span className="font-medium">Estimated Calories: </span> {
+                                        (
+                                            (item.fat_total_g || 0) * 9 +
+                                            (Math.max((item.carbohydrates_total_g || 0) - (item.fiber_g || 0), 0)) * 4 +
+                                            (item.fiber_g || 0) * 2
+                                            ).toFixed(0)
+                                        } kcal
+                                </div>
+                            </li>
+                            ))}
+                        </ul>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
