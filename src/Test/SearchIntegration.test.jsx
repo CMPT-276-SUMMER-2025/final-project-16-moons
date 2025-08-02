@@ -1,15 +1,16 @@
+// SearchIntegration.test.jsx
 import React from 'react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import Search from '../pages/Search'
 
-// ---- Mock static assets so imports don't break in tests
+// ---- Mock static assets
 vi.mock('../assets/icons/meat.png', () => ({ default: 'meat.png' }))
 vi.mock('../assets/icons/apple.png', () => ({ default: 'apple.png' }))
 vi.mock('../assets/icons/carrot.png', () => ({ default: 'carrot.png' }))
 vi.mock('../assets/images/linesHorizontal.png', () => ({ default: 'lines.png' }))
 
-// ---- Mock child components to keep the test focused on Search's behavior
+// ---- Mock child components
 vi.mock('../components/Search/SearchHint', () => ({
   default: () => <div data-testid="search-hint">SearchHint</div>,
 }))
@@ -24,8 +25,8 @@ vi.mock('../components/Search/SearchResult', () => ({
   ),
 }))
 
-vi.mock('../components/Search/SearchTopic', () => ({
-  default: ({ onSearch }) => {
+vi.mock('../components/Search/SearchTopic', () => {
+  function MockSearchTopic({ onSearch }) {
     const [localType, setLocalType] = React.useState('name')
     const [localQuery, setLocalQuery] = React.useState('')
     return (
@@ -44,8 +45,10 @@ vi.mock('../components/Search/SearchTopic', () => ({
         <div>Current type: {localType}</div>
       </div>
     )
-  },
-}))
+  }
+
+  return { default: MockSearchTopic }
+})
 
 const BASE = 'https://www.themealdb.com/api/json/v1/1'
 
