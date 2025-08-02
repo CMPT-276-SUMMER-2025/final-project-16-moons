@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Horizontal from '../components/Designs/Horizontal'
 import RandomRecipe from '../components/Search/SearchResult'
 
-export default function Scanner() {
+export default function Indecisive() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
     const [recipes, setRecipes] = useState([])
