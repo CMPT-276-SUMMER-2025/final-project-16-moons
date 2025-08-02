@@ -5,6 +5,8 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 
 export default [
   { ignores: ['dist'] },
+
+  // ✅ Main app config
   {
     files: ['**/*.{js,jsx}'],
     languageOptions: {
@@ -28,6 +30,24 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
+    },
+  },
+
+  // ✅ Test files config — adds Vitest globals like `expect`, `test`, `describe`
+  {
+    files: ['**/*.test.{js,jsx}'],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        ...globals.jest, // Also supports common test APIs
+        vi: 'readonly',
+        expect: 'readonly',
+        test: 'readonly',
+        describe: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+      },
     },
   },
 ]
