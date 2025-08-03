@@ -12,8 +12,6 @@ export default function Search() {
     const [loading, setLoading] = useState(false)
     const [isVisible, setIsVisible] = useState(false)
 
-    const key = import.meta.env.VITE_API_NINJAS_KEY
-
     // Get the endpoint for the topic the user has chosen
     // i.e., area, name, category, or main ingredient
     const getEndpoint = (searchType, query) => {
