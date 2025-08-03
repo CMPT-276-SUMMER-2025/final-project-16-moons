@@ -1,4 +1,3 @@
-import React from 'react'
 import WhatWeOfferCards from './WhatWeOfferCards'
 import search from '../assets/icons/search-interface-symbol.png'
 import scanner from '../assets/icons/Scanner.png'
@@ -11,29 +10,28 @@ import arrow from '../assets/icons/down-arrow.png'
 
 function Section2_Home() {
   return (
-    <>
     <section id="section2" className="grid p-15 min-w-svh">
         <div className="flex flex-col text-center mb-10">
             <h1 className="text-7xl">What We Offer</h1>
         </div>
         <div className='mt-10 grid sm:grid-cols-3 grid-col-1 gap-10 sm:ml-5 sm:mr-5 h-[280px]'>
           <WhatWeOfferCards
-          image={search}
-          title='Recipe Search'
-          content= 'Search for recipes by area, name, category, or main ingredient!'
-          link="#/search"
+            image={search}
+            title='Recipe Search'
+            content= 'Search for recipes by area, name, category, or main ingredient!'
+            link="#/search"
           />
           <WhatWeOfferCards
-          image={scanner}
-          title='Nutrition Scanner'
-          content= 'Get the nutrition facts of menus, recipes, or food journals by uploading an image!'
-          link="#/scanner"
+            image={scanner}
+            title='Nutrition Scanner'
+            content= 'Get the nutrition facts of menus, recipes, or food journals by uploading an image!'
+            link="#/scanner"
           />
           <WhatWeOfferCards
-          image={indecisive}
-          title='Feeling Indecisive?'
-          content= 'Randomly generate amazing recipes for breakfast, lunch, and dinner!'
-          link="#/indecisive"
+            image={indecisive}
+            title='Feeling Indecisive?'
+            content= 'Randomly generate amazing recipes for breakfast, lunch, and dinner!'
+            link="#/indecisive"
           />
         </div>
 
@@ -60,7 +58,6 @@ function Section2_Home() {
         </button>
       </div>
     </section>
-    </>
   )
 }
 

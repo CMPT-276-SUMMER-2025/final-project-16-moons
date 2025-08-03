@@ -11,14 +11,18 @@ export default function EmailForm() {
     const [showErrorMessage, setShowErrorMessage] = useState(false)
     const [isVisible, setIsVisible] = useState(false)
 
+    const serviceID = import.meta.env.VITE_EMAILJS_SERVICE_ID
+    const templateID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+
     const handleSubmit = (e) => {
         e.preventDefault()
 
         emailjs.sendForm(
-            'service_docczka',
-            'template_0gcoqzh',
+            serviceID,
+            templateID,
             e.target,
-            'ZX4gaCCwYyqMgwaK2'
+            publicKey
         ).then(
             () => setShowSuccessMessage(true),
             () => setShowErrorMessage(true)

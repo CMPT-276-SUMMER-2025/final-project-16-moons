@@ -150,7 +150,7 @@ export default function Search() {
             setRecipes(formattedRecipes)
         } catch (error) {
             console.error('Error:', error.message)
-            setError('Error: Failed to fetch recipes. Please try again.')
+            setError('Error: No recipes found. Try a different search term.')
             setRecipes([])
         } finally {
             setLoading(false)

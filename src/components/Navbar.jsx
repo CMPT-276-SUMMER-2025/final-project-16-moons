@@ -1,4 +1,3 @@
-import React from 'react';
 import {Link, useLocation} from 'react-router-dom';
 import logo from '../assets/icons/recipe-book.png';
 
@@ -6,9 +5,8 @@ function Navbar(){
     const location = useLocation();
 
     return (
-    <>
         <nav className="navbar shadow-md px-19 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6"
-        style={{ backgroundColor: '#DE6B48' }}>
+            style={{ backgroundColor: '#DE6B48' }}>
             <div className="flex-1 flex items-center gap-2">
                 <Link to="/">
                     <img src={logo} alt="logo" className="h-8 w-8 transition duration-300 hover:scale-115" />
@@ -38,10 +36,6 @@ function Navbar(){
                 </div>
             </div>
         </nav>
-
-    </>
-
-
     );
 }
 

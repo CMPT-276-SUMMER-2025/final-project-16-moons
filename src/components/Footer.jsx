@@ -1,5 +1,4 @@
-import { featuresLinks } from "../constants";
-import { aboutUsLinks } from "../constants";
+import { featuresLinks, aboutUsLinks } from "../constants";
 import {Link} from 'react-router-dom';
 import logo from '../assets/icons/recipe-book.png';
 
