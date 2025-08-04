@@ -72,7 +72,7 @@ export default function Search() {
         return ingredients.split('|').map(ingredient => {
             const trimmed = ingredient.trim()
             // use regex to separate measure from ingredient name
-            const match = trimmed.match(/^([\d\s\/\-\.\w]*)\s+(.+)$/)
+            const match = trimmed.match(/^([\d\s/\-. \w]*)\s+(.+)$/)
 
             // check if ingredient name and measure are separated properly
             if (match && match[1] && match[2]) {
