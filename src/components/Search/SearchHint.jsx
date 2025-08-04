@@ -4,10 +4,10 @@ export default function SearchHint({ searchType }) {
     const [isVisible, setIsVisible] = useState(false)
 
     const hints = {
-        ingredient: "E.g., 'Chicken' or 'Onion'. Only enter 1 word.",
-        name: "E.g., 'Lamb Pilaf' or 'Chicken Curry'. Only enter 1-2 words.",
-        area: "E.g., 'Canadian' or 'Mexican'. Only enter 1 word.",
-        category: "E.g., 'Seafood' or 'Dessert'. Only enter 1 word.",
+        ingredient: "Only enter 1 word. E.g., 'Spinach' or 'Onion'.",
+        name: "Only enter 1-2 words. E.g., 'Lamb Pilaf' or 'Chicken Curry'.",
+        area: "American, British, Canadian, Chinese, Croatian, Dutch, Egyptian, Filipino, French, Greek, Indian, Irish, Italian, Jamaican, Japanese, Kenyan, Malaysian, Mexican, Moroccan, Polish, Portuguese, Russian, Spanish, Thai, Tunisian, Turkish, Ukranian, Uruguayan, Vietnamese",
+        category: "Beef, Breakfast, Chicken, Dessert, Goat, Lamb, Miscellaneous, Pasta, Porl, Seafood, Side, Starter, Vegan, Vegetarian",
         initial: "Looks like you haven't chosen a search method yet. Pick one above!"
     }
 
@@ -25,6 +25,9 @@ export default function SearchHint({ searchType }) {
 
     return (
         <div className={`bg-base-200 p-6 rounded-xl shadow-lg transition ${isVisible ? 'opacity-100 translate-y-0 delay-500' : 'opacity-0 translate-y-10'}`}>
+            {((searchType === "area") || (searchType === "category")) && (
+                <h1 className="font-medium">Possible search terms (only enter 1 word):</h1>
+            )}
             <h1>{hints[searchType]}</h1>
         </div>
     )

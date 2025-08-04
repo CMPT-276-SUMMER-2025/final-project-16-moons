@@ -6,7 +6,7 @@ export default function SearchTopic({ onSearch, searchType, setSearchType, input
     const placeholderText = {
         ingredient: "Search for recipes by main ingredient...",
         name: "Search for recipes by name...",
-        area: "Search for recipes by area...",
+        area: "Search for recipes by cuisine...",
         category: "Search for recipes by category...",
         initial: "Pick an option above to start searching for recipes!"
     }
