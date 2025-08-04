@@ -4,10 +4,10 @@ export default function SearchHint({ searchType }) {
     const [isVisible, setIsVisible] = useState(false)
 
     const hints = {
-        ingredient: "E.g., 'Chicken' or 'Onion'",
-        name: "E.g., 'Lamb Pilaf' or 'Chicken Curry'",
-        area: "E.g., 'Canadian' or 'Mexican'",
-        category: "E.g., 'Seafood' or 'Dessert'",
+        ingredient: "E.g., 'Chicken' or 'Onion'. Only enter 1 word.",
+        name: "E.g., 'Lamb Pilaf' or 'Chicken Curry'. Only enter 1-2 words.",
+        area: "E.g., 'Canadian' or 'Mexican'. Only enter 1 word.",
+        category: "E.g., 'Seafood' or 'Dessert'. Only enter 1 word.",
         initial: "Looks like you haven't chosen a search method yet. Pick one above!"
     }
 
