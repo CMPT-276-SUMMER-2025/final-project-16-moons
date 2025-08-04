@@ -25,8 +25,10 @@ vi.mock('../Hooks/UseRecipe.js', () => ({
 
 describe('SearchResult API call test', () => {
   beforeEach(() => {
+    // Mock the global fetch function
     global.fetch = vi.fn(() => {
       return Promise.resolve({
+        ok: true, // Crucial: Indicate a successful response
         json: () =>
           Promise.resolve([
             {
@@ -44,6 +46,7 @@ describe('SearchResult API call test', () => {
   });
 
   afterEach(() => {
+    // Clear all mocks after each test to ensure isolation
     vi.clearAllMocks();
   });
 
@@ -59,23 +62,24 @@ describe('SearchResult API call test', () => {
       />
     );
 
-    // Trigger modal open (calls setSelectedRecipe & fetch)
+    // Trigger modal open by clicking the search result item
     fireEvent.click(screen.getByText(/1\. Mock Dish/i));
 
-    // Wait for nutrition section to appear in modal
+    // Wait for the nutrition section to appear in the modal and assert its content
     await waitFor(() => {
       const nutritionBlock = screen
         .getByText('Nutrition Analysis')
         .closest('div');
       expect(nutritionBlock).toBeTruthy();
-      expect(nutritionBlock.textContent).toContain('Fat');
-      expect(nutritionBlock.textContent).toContain('Sodium');
-      expect(nutritionBlock.textContent).toContain('Cholesterol');
-      expect(nutritionBlock.textContent).toContain('Estimated Calories');
-      expect(nutritionBlock.textContent).toContain('640'); // kcal
+      expect(nutritionBlock.textContent).toContain('Fat:');
+      expect(nutritionBlock.textContent).toContain('Sodium:');
+      expect(nutritionBlock.textContent).toContain('Cholesterol:');
+      expect(nutritionBlock.textContent).toContain('Estimated Calories:');
+
+      expect(nutritionBlock.textContent).toContain('640');
     });
 
-    // Assert fetch calls—only on URL and that an options object is passed
+    // Assert that fetch was called for each ingredient
     expect(global.fetch).toHaveBeenCalledTimes(2);
     expect(global.fetch).toHaveBeenCalledWith(
       expect.stringContaining('100g%20Pasta'),
