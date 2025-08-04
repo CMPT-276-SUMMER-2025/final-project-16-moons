@@ -267,7 +267,7 @@ export default function Search() {
     })
 
     return(
-        //container for UI formatting on search page 
+        //container for UI formatting on search page
         <div className="flex flex-row justify-center px-20 py-10 space-x-20 h-200">
             <div className={`w-[35%] text-left text-3xl flex flex-col transition ${isVisible ? 'opacity-100 translate-y-0 delay-100' : 'opacity-0 translate-y-10'}`}>
                 <p className="pb-3">Only remember part of the name of a recipe?</p>
@@ -277,10 +277,10 @@ export default function Search() {
                 <p className="py-3">You can get started by simply clicking on the search method you want to use, on the right.</p>
                 <p className="py-3">Once you're done searching, click on a recipe to see its detailed information!</p>
                 <Horizontal />
-        //handles search type selector component
-        //displays search options and input field 
+        {/* handles search type selector component */}
+        {/* displays search options and input field  */}
             </div>
-            <div className="flex flex-col w-[40%] gap-6"> 
+            <div className="flex flex-col w-[40%] gap-6">
                 <SearchTopic
                     onSearch={handleSearch}
                     searchType={searchType}
@@ -299,17 +299,17 @@ export default function Search() {
                             <h1>Note: Due to project and API constraints, this feature only returns one search result and is missing image, area, and category data.</h1>
                         </div>
                     )}
-                //handles error if API fails or user input is invalid
+                {/* handles error if API fails or user input is invalid */}
                     {error && (
                         <div className="bg-base-200 p-6 rounded-xl shadow-lg">
                             <h1 className="font-medium text-error">{error}</h1>
                         </div>
                     )}
-                //loops over recipes array and renders SearchResult to show recipe details
+                {/* loops over recipes array and renders SearchResult to show recipe details */}
                     {recipes.map((recipe, idx) => (
                         <SearchResult key={idx} number={idx + 1} name={recipe.name} image={recipe.image} recipeData={recipe} area={recipe.area} category={recipe.category} />
                     ))}
-                //loads spinner for search buffering
+                {/* loads spinner for search buffering */}
                     {loading && (
                         <div className="flex flex-row space-x-5">
                             <p className="text-2xl">Fetching recipes, hang tight!</p>
