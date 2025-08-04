@@ -6,6 +6,7 @@ export default function SearchResult({ number, name, image, area, category, reci
   const { setSelectedRecipe, selectedRecipe } = useRecipe();
   const [showModal, setShowModal] = useState(false);
   const [nutritionData, setNutritionData] = useState([]);
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const modalRef = useRef(null);
 
@@ -32,6 +33,7 @@ export default function SearchResult({ number, name, image, area, category, reci
 
   useEffect(() => {
     const fetchNutrition = async () => {
+      setError(null)
       if (!selectedRecipe?.ingredients) return;
       setLoading(true);
       const results = await Promise.all(
@@ -46,9 +48,17 @@ export default function SearchResult({ number, name, image, area, category, reci
                 },
               }
             );
+
+            if (!response.ok) {
+              throw new Error(`Error: ${response.status}`)
+            }
+
             const data = await response.json();
+
             return { ingredient: ing.name, data: data[0] };
-          } catch {
+          } catch (err) {
+            console.error("Error: ", err.message)
+            setError("API Ninja's text to nutrition endpoint may be down. Try refreshing the page or check the status at https://api-ninjas.com/api/nutrition.")
             return { ingredient: ing.name, data: null };
           }
         })
@@ -319,6 +329,17 @@ export default function SearchResult({ number, name, image, area, category, reci
                       <p className="text-gray-600">Analyzing nutritional data, hang tight!</p>
                       <span className="loading loading-spinner text-primary loading-"></span>
                     </div>
+                  ) : error ? (
+                    <p className="text-error">
+                      Error: API Ninja's text to nutrition endpoint may be down. Check the status at{" "}
+                      <a
+                        href="https://api-ninjas.com/api/nutrition"
+                        target="_blank"
+                        className="text-error underline"
+                      >
+                        https://api-ninjas.com/api/nutrition.
+                      </a>
+                    </p>
                   ) : (
                     <>
                       <ul className="list-disc ml-5 space-y-1 text-secondary-content">
