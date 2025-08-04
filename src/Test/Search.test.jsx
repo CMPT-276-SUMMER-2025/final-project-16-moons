@@ -2,7 +2,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Search from '../pages/Search';
-import { vi, describe, test, beforeEach, afterEach, expect } from 'vitest';
+import { vi, describe, test, afterEach, expect } from 'vitest';
 
 // --- MOCKING CHILD COMPONENTS ---
 // These mocks remain the same as they correctly simulate user interaction.
