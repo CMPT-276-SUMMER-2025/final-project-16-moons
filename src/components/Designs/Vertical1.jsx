@@ -8,8 +8,12 @@ export default function Vertical1() {
     const [isVisible, setIsVisible] = useState(false)
 
     useEffect(() => {
+        // starts a timer, then after 300 ms, the state of isVisible changes
+        // this is used for the animation of components on page load
         const showTimeout = setTimeout(() => setIsVisible(true), 300)
 
+        // if the component unmounts or re-renders before the timeout finishes,
+        // the timer is cleared to prevent memory leaks and warnings
         return () => {
             clearTimeout(showTimeout);
         }

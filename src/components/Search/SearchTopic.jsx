@@ -11,12 +11,15 @@ export default function SearchTopic({ onSearch, searchType, setSearchType, input
         initial: "Pick an option above to start searching for recipes!"
     }
 
+    // handle search
     const handleSearch = () => {
+        // if the input text isn't empty and the search type isn't initial, handle the recipe search
         if (inputText.trim() && searchType !== "initial") {
             onSearch(searchType, inputText.trim())
         }
     }
 
+    // handle key press
     const handleKeyPress = (e) => {
         if (e.key === "Enter") {
             handleSearch()
@@ -24,9 +27,14 @@ export default function SearchTopic({ onSearch, searchType, setSearchType, input
     }
 
     useEffect(() => {
+        // search type is set to inital at first, to display a message on page land
         setSearchType("initial")
+        // starts a timer, then after 300 ms, the state of isVisible changes
+        // this is used for the animation of components on page load
         const showTimeout = setTimeout(() => setIsVisible(true), 300)
 
+        // if the component unmounts or re-renders before the timeout finishes,
+        // the timer is cleared to prevent memory leaks and warnings
         return () => {
             clearTimeout(showTimeout);
         }

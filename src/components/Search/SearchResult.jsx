@@ -79,6 +79,9 @@ export default function SearchResult({ number, name, image, area, category, reci
     setShowModal(true);
   };
 
+  // function for generating a PDF by using HTML code for PDF formatting
+  // opens a new tab with the HTML code and prompts the user to print the page to PDF
+  // simply printing the page to PDF would result in a very messily and poorly formmated recipe, hence the HTML formatting strategy
   const generatePDF = () => {
     const printWindow = window.open('', '_blank');
     const htmlContent = `
@@ -235,7 +238,7 @@ export default function SearchResult({ number, name, image, area, category, reci
               <p className="text-md text-secondary-content group-hover:text-white transition duration-300">{category}</p>
             </div>
           </div>
-          <img src={image} className="h-40 w-40 rounded-xl" alt={name} />
+          <img src={image} className="h-40 w-40 rounded-xl" alt={name  + ' - Picture unavailable.'} />
         </div>
       </div>
 
@@ -254,12 +257,12 @@ export default function SearchResult({ number, name, image, area, category, reci
                 <div className="flex gap-6">
                   <img
                     src={selectedRecipe.image}
-                    alt={selectedRecipe.name}
+                    alt={selectedRecipe.name + ' - Picture unavailable.'}
                     className="w-52 h-52 rounded-xl shadow-xl"
                   />
                   <div>
                     <h1 className="text-3xl font-bold">{selectedRecipe.name}</h1>
-                    <p className="mt-2 text-gray-500 text-sm italic">Powered by TheMealDB & Nutrition API</p>
+                    <p className="mt-2 text-gray-500 text-sm italic">Powered by TheMealDB & API Ninjas</p>
                     <div className="flex space-x-1 mt-4">
                       <p className="text-md font-semibold group-hover:text-white transition duration-300">Area:</p>
                       <p className="text-md text-secondary-content group-hover:text-white  transition duration-300">{selectedRecipe.area}</p>

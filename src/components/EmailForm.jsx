@@ -15,19 +15,29 @@ export default function EmailForm() {
     const templateID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
     const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
 
+    // handle form submission
     const handleSubmit = (e) => {
+        // prevents the page from refreshing/redirecting on form submission
         e.preventDefault()
 
+        // send an email using EmailJS
         emailjs.sendForm(
+            // the type of EmailJS service being used
             serviceID,
+            // the specific email template being used
             templateID,
+            // the form input data
             e.target,
+            // EmailJS key for authentication
             publicKey
         ).then(
+            // on success, show the success message
             () => setShowSuccessMessage(true),
+            // on failure, show the error message
             () => setShowErrorMessage(true)
         )
 
+        // reset the states after form submission
         setName('')
         setEmail('')
         setSubject('')
@@ -35,10 +45,14 @@ export default function EmailForm() {
     }
 
     useEffect(() => {
+        // starts a timer, then after a certain amount of ms, the states change
+        // this is used for the animation of components on page load and for showing/hiding success/error messages
         const showTimeout = setTimeout(() => setIsVisible(true), 300)
         const showSuccess = setTimeout(() => setShowSuccessMessage(false), 10000)
         const showError = setTimeout(() => setShowErrorMessage(false), 10000)
 
+        // if the component unmounts or re-renders before the timeouts finish,
+        // the timers are cleared to prevent memory leaks and warnings
         return () => {
             clearTimeout(showTimeout);
             clearTimeout(showSuccess);

@@ -12,6 +12,8 @@ export default function Search() {
     const [loading, setLoading] = useState(false)
     const [isVisible, setIsVisible] = useState(false)
 
+    const key = import.meta.env.VITE_API_NINJAS_KEY
+
     // Get the endpoint for the topic the user has chosen
     // i.e., area, name, category, or main ingredient
     const getEndpoint = (searchType, query) => {
@@ -20,7 +22,9 @@ export default function Search() {
 
         switch (searchType) {
             case 'name':
-                return `${baseUrl}/search.php?s=${encodedQuery}`
+                // If you want to use TheMealDB's recipe search by name endpoint instead of API Ninjas, replace the line below with this line:
+                // return `${baseUrl}/search.php?s=${encodedQuery}`
+                return `https://api.api-ninjas.com/v1/recipe?query=${encodedQuery}`
             case 'ingredient':
                 return `${baseUrl}/filter.php?i=${encodedQuery}`
             case 'area':
@@ -32,17 +36,24 @@ export default function Search() {
         }
     }
 
-    // Format the ingredients from the JSON data of one recipe
-    const formatIngredients = (meal) => {
+    // Format the ingredients for one recipe from TheMealDB
+    const formatTheMealDBIngredients = (meal) => {
+        if (!meal) {
+            return []
+        }
+
         const ingredients = []
 
+        // Loop through all possible ingredient slots (TheMealDB responses can have up to 20 ingredients)
         for (let i = 1; i <= 20; i++) {
             const ingredient = meal[`strIngredient${i}`]
             const measure = meal[`strMeasure${i}`]
 
+            // check if the ingredient exists and isn't empty
             if (ingredient && ingredient.trim()) {
                 ingredients.push({
                     name: ingredient.trim(),
+                    // handle cases where there is no value for measure
                     measure: measure ? measure.trim() : ''
                 })
             }
@@ -51,39 +62,87 @@ export default function Search() {
         return ingredients
     }
 
-    // Format the recipes to have name, image, instructions, and ingredients
-    const formatRecipes = (data) => {
-        return data.meals
-            .map(meal => ({
-                name: meal.strMeal,
-                image: meal.strMealThumb,
-                category: meal.strCategory,
-                area: meal.strArea,
-                instructions: meal.strInstructions,
-                ingredients: formatIngredients(meal)
+    // Format the ingredients for one recipe from API Ninjas
+    const formatAPINinjasIngredients = (ingredients) => {
+        if (!ingredients) {
+            return []
+        }
+
+        // split the pipe-separated string and process each ingredient
+        return ingredients.split('|').map(ingredient => {
+            const trimmed = ingredient.trim()
+            // use regex to separate measure from ingredient name
+            const match = trimmed.match(/^([\d\s\/\-\.\w]*)\s+(.+)$/)
+
+            // check if ingredient name and measure are separated properly
+            if (match && match[1] && match[2]) {
+                return {
+                    name: match[2].trim(),
+                    measure: match[1].trim()
+                }
+            } else {
+                return {
+                    name: trimmed,
+                    measure: ''
+                }
+            }
+        // remove ingredients with empty names
+        }).filter(ingredient => ingredient.name)
+    }
+
+    // Format the recipe objects to have name, image, area, category, instructions, and ingredients
+    const formatRecipes = (data, isAPINinjas) => {
+        // Check if the recipe is from API Ninjas or TheMealDB
+        if (isAPINinjas) {
+            return data.map(recipe => ({
+                name: recipe.title,
+                // API ninjas doesn't provide image, category, or area data
+                image: null,
+                category: 'Unavailable',
+                area: 'Unavailable',
+                instructions: recipe.instructions,
+                ingredients: formatAPINinjasIngredients(recipe.ingredients),
             }))
+        } else {
+            return data.meals
+                .map(meal => ({
+                    name: meal.strMeal,
+                    image: meal.strMealThumb,
+                    category: meal.strCategory,
+                    area: meal.strArea,
+                    instructions: meal.strInstructions,
+                    ingredients: formatTheMealDBIngredients(meal),
+                }))
+        }
     }
 
     // In the case where the user chooses area, category, or main ingredient, this function is ran
-    // Calling the API for those topics only returns recipe names, not recipe information like ingredients or instructions
-    // So this function is to get the missing data for the recipes when those certain topics are chosen
+    // Calling the TheMealDB for those topics only returns recipe names, not recipe information like ingredients or instructions
+    // So this function is to get the missing data for a recipe when those certain topics are chosen
     const getRecipeData = async (recipeName) => {
         try {
-            const endpoint = getEndpoint('name', recipeName)
+            // use TheMealDB's recipe search by name endpoint instead of API Ninja's
+            const endpoint = `https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(recipeName)}`
+            // make the API call
             const response = await fetch(endpoint)
 
+            // if the response is unsuccessful, throw an error
             if (!response.ok) {
                 throw new Error(`Error: ${response.status}`)
             }
 
+            // parse the JSON data
             const data = await response.json()
 
+            // TheMealDB returns a list of recipes when searching by name
+            // the very first result should be the recipe that was entered by the user
+            // check if the recipe was found, then return the first recipe in the list
             if (data && data.meals && data.meals.length > 0) {
                 return data.meals[0]
             }
 
-            return null
         } catch (error) {
+            // handle thrown errors
             console.error('Error:', error.message)
             return null
         }
@@ -93,24 +152,30 @@ export default function Search() {
     const fillRecipeData = async (recipes) => {
         const updatedRecipes = []
 
+        // process each recipe to fill in missing data
         for (const recipe of recipes) {
+            // check if the recipe is missing inredients or instructions
             if (!recipe.ingredients || !recipe.instructions) {
+                // make the API call
                 const data = await getRecipeData(recipe.name)
 
                 if (data) {
+                    // create an updated recipe object with the required data
                     const updatedRecipe = {
                         ...recipe,
                         instructions: data.strInstructions || recipe.instructions,
-                        ingredients: formatIngredients(data),
+                        ingredients: formatTheMealDBIngredients(data),
                         category: data.strCategory,
                         area: data.strArea
                     }
 
+                    // check if the recipe has all the required data, then add it to the array
                     if (updatedRecipe.name && updatedRecipe.image && updatedRecipe.category && updatedRecipe.area) {
                         updatedRecipes.push(updatedRecipe)
                     }
                 }
             } else {
+                // if the recipe already has the required data, add it to the array without changing anything
                 updatedRecipes.push(recipe)
             }
         }
@@ -120,46 +185,82 @@ export default function Search() {
 
     // This function is ran when the user enters their search or clicks the search button
     const handleSearch = async (searchType, query) => {
+        // reset states on each search
         setRecipes([])
         setError('')
+        // start the loader
         setLoading(true)
 
         try {
+            // get the endpoint needed for the searchType
             const endpoint = getEndpoint(searchType, query)
-            const response = await fetch(endpoint)
+            // check if the recipe search by name is being used
+            const isApiNinjas = searchType === 'name'
 
+            // configure the fetch options for an API Ninjas call
+            const fetchOptions = isApiNinjas ? {
+                headers: {
+                    'X-Api-Key': key
+                }
+            } : {}
+
+            // make the API call
+            const response = await fetch(endpoint, fetchOptions)
+
+            // if the response is unsuccessful, throw an error
             if (!response.ok) {
                 throw new Error(`Error: ${response.status}`)
             }
 
+            // parse the JSON response
             const data = await response.json()
-            let formattedRecipes = formatRecipes(data)
 
-            if (formattedRecipes.length === 0) {
+            // check if any recipes were found (different response format for each API)
+            let hasRecipes = false
+            if (isApiNinjas) {
+                // API Ninjas returns one array corresponding to one recipe
+                hasRecipes = Array.isArray(data) && data.length > 0
+            } else {
+                // TheMealDB returns a JSON object with a 'meals' array that contains many recipes
+                hasRecipes = data.meals && data.meals.length > 0
+            }
+
+            // if there were no recipes found, handle the error
+            if (!hasRecipes) {
                 setError('Error: No recipes found. Try a different search term.')
                 setRecipes([])
                 return
             }
 
+            // format the recipes
+            let formattedRecipes = formatRecipes(data, isApiNinjas)
+
             // Only fill recipe data for non-name searches
             // Name searches already return complete data
-            if (searchType !== 'name') {
+            if (!isApiNinjas && searchType !== 'name') {
                 formattedRecipes = await fillRecipeData(formattedRecipes)
             }
 
+            // update the recipe list with the proper recipes
             setRecipes(formattedRecipes)
         } catch (error) {
+            // handle thrown errors
             console.error('Error:', error.message)
             setError('Error: No recipes found. Try a different search term.')
             setRecipes([])
         } finally {
+            // stop the loader
             setLoading(false)
         }
     }
 
     useEffect(() => {
+        // starts a timer, then after 300 ms, the state of isVisible changes
+        // this is used for the animation of components on page load
         const showTimeout = setTimeout(() => setIsVisible(true), 300)
 
+        // if the component unmounts or re-renders before the timeout finishes,
+        // the timer is cleared to prevent memory leaks and warnings
         return () => {
             clearTimeout(showTimeout);
         }
@@ -189,6 +290,12 @@ export default function Search() {
 
                 <div className="bg-white p-6 rounded-xl shadow-2xl max-h-full flex-1 space-y-5 overflow-y-auto transition">
                     <SearchHint searchType={searchType} />
+
+                    {searchType === 'name' && (
+                        <div className={`bg-base-200 p-6 rounded-xl shadow-lg transition ${isVisible ? 'opacity-100 translate-y-0 delay-500' : 'opacity-0 translate-y-10'}`}>
+                            <h1>Note: Due to project and API constraints, this feature only returns one search result and is missing image, area, and category data.</h1>
+                        </div>
+                    )}
 
                     {error && (
                         <div className="bg-base-200 p-6 rounded-xl shadow-lg">

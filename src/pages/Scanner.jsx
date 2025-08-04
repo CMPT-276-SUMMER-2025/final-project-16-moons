@@ -11,6 +11,7 @@ export default function Scanner() {
 
     const key = import.meta.env.VITE_API_NINJAS_KEY
 
+    // check if the uploaded image fits within the image-to-text endpoint constraints
     const validateImage = (file) => {
         const maxSize = 200000; // this is in bytes, equivalent to 200 kb
         const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
@@ -24,24 +25,32 @@ export default function Scanner() {
         }
     }
 
+    // handles events for whenever the upload image button is clicked
     const imageChange = (e) => {
         const selectedFile = e.target.files[0];
 
+        // check if there is a file selected
         if (selectedFile) {
             try {
+                // check if the image is valid and set it to the current image
                 validateImage(selectedFile);
                 setImage(selectedFile);
+                // reset states on file upload
                 setNutritionData([])
                 setError('')
             } catch (err) {
+                // catch any errors and reset states
                 setError(err.message);
                 setImage(null);
+                setNutritionData([]);
                 e.target.value = '';
             }
         } else {
+            // if there's no file selected, reset the states just in case
+            setError('');
             setImage(null);
             setNutritionData([]);
-            setError('');
+            e.target.value = '';
         }
     };
 
@@ -105,6 +114,7 @@ export default function Scanner() {
             setNutritionData(data);
         } catch (err) {
             console.error("Nutritional Analysis Error:", err);
+
             if (!err.message || (err.message === "Failed to fetch")) {
                 setError("Error: An unexpected error occurred. Please try again.")
             } else {
@@ -116,13 +126,20 @@ export default function Scanner() {
     };
 
     useEffect(() => {
+        // starts a timer, then after 300 ms, the state of isVisible changes
+        // this is used for the animation of components on page load
         const showTimeout = setTimeout(() => setIsVisible(true), 300)
 
+        // if the component unmounts or re-renders before the timeout finishes,
+        // the timer is cleared to prevent memory leaks and warnings
         return () => {
             clearTimeout(showTimeout);
         }
     })
 
+    // function for generating a PDF by using HTML code for PDF formatting
+    // opens a new tab with the HTML code and prompts the user to print the page to PDF
+    // simply printing the page to PDF would result in a very messily and poorly formmated recipe, hence the HTML formatting strategy
     const generatePDF = () => {
         const printWindow = window.open('', '_blank');
         const htmlContent = `
