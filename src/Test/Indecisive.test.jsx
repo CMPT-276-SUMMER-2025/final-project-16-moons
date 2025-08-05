@@ -1,75 +1,77 @@
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import Indecisive from '../pages/Indecisive'
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import Indecisive from "../pages/Indecisive";
 
-// Mock the recipe‐context hook so SearchResult won’t crash
-vi.mock('../Hooks/UseRecipe', () => ({
+// Mock the useRecipe hook so that components using it (like SearchResult) won't crash during testing
+vi.mock("../Hooks/UseRecipe", () => ({
   __esModule: true,
   default: () => ({
     setSelectedRecipe: vi.fn(),
     selectedRecipe: null,
   }),
-}))
+}));
 
+// Fake recipe data returned from the mock API
 const fakeMeal = {
-  strMeal: 'Test Meal',
-  strMealThumb: 'https://example.com/thumb.jpg',
-  strCategory: 'Test Category',
-  strArea: 'Test Area',
-  strInstructions: 'Do something.',
-  strIngredient1: 'Ingredient A',
-  strMeasure1: '1 cup',
-}
+  strMeal: "Test Meal",
+  strMealThumb: "https://example.com/thumb.jpg",
+  strCategory: "Test Category",
+  strArea: "Test Area",
+  strInstructions: "Do something.",
+  strIngredient1: "Ingredient A",
+  strMeasure1: "1 cup",
+};
 
-describe('Scanner component', () => {
+describe("Scanner component", () => {
+  // Set up successful fetch before each test
   beforeEach(() => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
         ok: true,
         json: () => Promise.resolve({ meals: [fakeMeal] }),
       })
-    )
-  })
+    );
+  });
 
+  // Clean up mocks after each test
   afterEach(() => {
-    vi.restoreAllMocks()
-  })
+    vi.restoreAllMocks();
+  });
 
-  test('fetches 3 recipes on click and displays them', async () => {
-    render(<Indecisive />)
+  test("fetches 3 recipes on click and displays them", async () => {
+    render(<Indecisive />);
 
-    // Verify initial prompt is on screen
+    // Ensure the initial prompt is visible
     expect(
       screen.getByText(/don't know what you want to eat today\?/i)
-    ).toBeInTheDocument()
+    ).toBeInTheDocument();
 
-    // Simulate click on "Surprise Me!" button
-    await userEvent.click(
-      screen.getByRole('button', { name: /surprise me/i })
-    )
+    // Click the "Surprise Me!" button
+    await userEvent.click(screen.getByRole("button", { name: /surprise me/i }));
 
-    // Wait for any heading with "Test Meal" to appear
-    const headings = await screen.findAllByRole('heading', { name: /test meal/i })
-    expect(headings).toHaveLength(3)
+    // Expect three recipe cards with the fake title to render
+    const headings = await screen.findAllByRole("heading", {
+      name: /test meal/i,
+    });
+    expect(headings).toHaveLength(3);
 
-    // Confirm fetch was called 3 times
-    expect(global.fetch).toHaveBeenCalledTimes(3)
-  })
+    // Verify that fetch was called three times (once per recipe)
+    expect(global.fetch).toHaveBeenCalledTimes(3);
+  });
 
-  test('displays error message on fetch failure', async () => {
-    global.fetch = vi.fn(() =>
-      Promise.resolve({ ok: false, status: 500 })
-    )
+  test("displays error message on fetch failure", async () => {
+    // Override fetch to simulate a failed response
+    global.fetch = vi.fn(() => Promise.resolve({ ok: false, status: 500 }));
 
-    render(<Indecisive />)
+    render(<Indecisive />);
 
-    await userEvent.click(
-      screen.getByRole('button', { name: /surprise me/i })
-    )
+    // Click the "Surprise Me!" button
+    await userEvent.click(screen.getByRole("button", { name: /surprise me/i }));
 
+    // Check that an error message is shown
     const err = await screen.findByText(
       /error: failed to fetch recipes\. please try again\./i
-    )
-    expect(err).toBeInTheDocument()
-  })
-})
+    );
+    expect(err).toBeInTheDocument();
+  });
+});

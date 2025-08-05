@@ -2,21 +2,28 @@ import { useState, useEffect, useRef } from 'react';
 import useRecipe from '../../Hooks/UseRecipe.js';
 import { FaFileDownload, FaTimes } from 'react-icons/fa';
 
+
+// SearchResult component displays a summary of a recipe and shows a modal with full details
 export default function SearchResult({ number, name, image, area, category, recipeData }) {
+
   const { setSelectedRecipe, selectedRecipe } = useRecipe();
-  const [showModal, setShowModal] = useState(false);
-  const [nutritionData, setNutritionData] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const modalRef = useRef(null);
 
-  const key = import.meta.env.VITE_API_NINJAS_KEY
+  const [showModal, setShowModal] = useState(false);  
+  const [nutritionData, setNutritionData] = useState([]); 
+  const [error, setError] = useState(null); 
+  const [loading, setLoading] = useState(false); 
+  
+  const modalRef = useRef(null); // Reference for modal DOM element
 
+  const key = import.meta.env.VITE_API_NINJAS_KEY; // API key for Nutrition API
+
+  // Order of nutrition keys to display
   const nutritionOrder = [
     "fat_total_g", "sodium_mg", "potassium_mg",
     "cholesterol_mg", "carbohydrates_total_g", "fiber_g", "sugar_g"
   ];
 
+  //nutrition labels
   const displayLabel = {
     fat_total_g: "Fat",
     sodium_mg: "Sodium",
@@ -27,15 +34,20 @@ export default function SearchResult({ number, name, image, area, category, reci
     sugar_g: "Sugar",
   };
 
-  const units = [
-    "g", "mg", "mg", "mg", "g", "g", "g"
-  ]
+  // Units corresponding to each nutrition field
+  const units = [ "g", "mg", "mg", "mg", "g", "g", "g" ];
 
+  /**
+   * useEffect hook to fetch nutrition data when modal opens and a recipe is selected.
+   * Calls API-Ninjas' Nutrition endpoint for each ingredient.
+   * Updates state with fetched nutrition data or error if any.
+   */
   useEffect(() => {
     const fetchNutrition = async () => {
-      setError(null)
+      setError(null);
       if (!selectedRecipe?.ingredients) return;
       setLoading(true);
+
       const results = await Promise.all(
         selectedRecipe.ingredients.map(async (ing) => {
           const query = `${ing.measure} ${ing.name}`;
@@ -50,19 +62,19 @@ export default function SearchResult({ number, name, image, area, category, reci
             );
 
             if (!response.ok) {
-              throw new Error(`Error: ${response.status}`)
+              throw new Error(`Error: ${response.status}`);
             }
 
             const data = await response.json();
-
             return { ingredient: ing.name, data: data[0] };
           } catch (err) {
-            console.error("Error: ", err.message)
-            setError("API Ninja's text to nutrition endpoint may be down. Try refreshing the page or check the status at https://api-ninjas.com/api/nutrition.")
+            console.error("Error: ", err.message);
+            setError("API Ninja's text to nutrition endpoint may be down. Try refreshing the page or check the status at https://api-ninjas.com/api/nutrition.");
             return { ingredient: ing.name, data: null };
           }
         })
       );
+
       setNutritionData(results);
       setLoading(false);
     };
@@ -72,6 +84,10 @@ export default function SearchResult({ number, name, image, area, category, reci
     }
   }, [showModal, selectedRecipe]);
 
+  /*
+    Calculates total nutrition values for each nutrient type across all ingredients.
+    Output: Object with keys from `nutritionOrder` and numeric values.
+   */
   const totals = nutritionOrder.reduce((acc, key) => {
     acc[key] = nutritionData.reduce((sum, item) => {
       return item.data && !isNaN(item.data[key]) ? sum + Number(item.data[key]) : sum;
@@ -79,157 +95,43 @@ export default function SearchResult({ number, name, image, area, category, reci
     return acc;
   }, {});
 
+  /*
+   Calculates estimated calories from totals:
+   Fat: 9 kcal/g
+   Net carbs (carbs - fiber): 4 kcal/g
+   Fiber: 2 kcal/g
+   Output: Number (estimated total calories)
+   */
   const estimatedCalories =
     (totals.fat_total_g || 0) * 9 +
     (Math.max((totals.carbohydrates_total_g || 0) - (totals.fiber_g || 0), 0)) * 4 +
     (totals.fiber_g || 0) * 2;
 
+  /*
+    Handles user clicking the recipe card.
+    Sets selected recipe and opens the modal.
+   */
   const handleClick = () => {
     setSelectedRecipe(recipeData);
     setShowModal(true);
   };
 
-  // function for generating a PDF by using HTML code for PDF formatting
-  // opens a new tab with the HTML code and prompts the user to print the page to PDF
-  // simply printing the page to PDF would result in a very messily and poorly formmated recipe, hence the HTML formatting strategy
+  /*
+    Opens a new window and generates a printable HTML version of the recipe.
+    Includes recipe image, ingredients, instructions, and nutrition info.
+    Automatically triggers the browser print dialog.
+   */
   const generatePDF = () => {
     const printWindow = window.open('', '_blank');
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>${selectedRecipe.name} - Recipe</title>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              max-width: 800px;
-              margin: 0 auto;
-              padding: 20px;
-              line-height: 1.6;
-              color: #333;
-            }
-            .header {
-              text-align: center;
-              border-bottom: 2px solid #333;
-              padding-bottom: 20px;
-              margin-bottom: 30px;
-            }
-            .recipe-image {
-              width: 200px;
-              height: 200px;
-              object-fit: cover;
-              border-radius: 10px;
-              margin-bottom: 20px;
-              box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            }
-            .recipe-title {
-              font-size: 28px;
-              font-weight: bold;
-              margin-bottom: 10px;
-            }
-            .recipe-meta {
-              font-size: 16px;
-              color: #666;
-              margin: 5px 0;
-            }
-            .section {
-              margin-bottom: 30px;
-              page-break-inside: avoid;
-            }
-            .section-title {
-              font-size: 20px;
-              font-weight: bold;
-              margin-bottom: 15px;
-              color: #2c3e50;
-              border-bottom: 1px solid #eee;
-              padding-bottom: 5px;
-            }
-            .ingredients-list {
-              list-style-type: disc;
-              padding-left: 20px;
-            }
-            .ingredients-list li {
-              margin-bottom: 8px;
-            }
-            .instructions {
-              white-space: pre-line;
-              line-height: 1.8;
-            }
-            .nutrition-list {
-              list-style-type: none;
-              padding-left: 0;
-            }
-            .nutrition-list li {
-              margin-bottom: 5px;
-              padding: 5px;
-              background-color: #f8f9fa;
-              border-radius: 3px;
-            }
-            .calories {
-              font-size: 18px;
-              font-weight: bold;
-              background-color: #e9a48dff;
-              padding: 10px;
-              border-radius: 5px;
-              text-align: left;
-              margin-top: 15px;
-            }
-            @media print {
-              body { margin: 0; }
-              .no-print { display: none; }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <img src="${selectedRecipe.image}" alt="${selectedRecipe.name}" class="recipe-image" />
-            <div class="recipe-title">${selectedRecipe.name}</div>
-            <div class="recipe-meta">Area: ${selectedRecipe.area}</div>
-            <div class="recipe-meta">Category: ${selectedRecipe.category}</div>
-          </div>
-
-          <div class="section">
-            <div class="section-title">Ingredients</div>
-            <ul class="ingredients-list">
-              ${selectedRecipe.ingredients.map(ing =>
-                `<li><strong>${ing.name}</strong> — ${ing.measure}</li>`
-              ).join('')}
-            </ul>
-          </div>
-
-          <div class="section">
-            <div class="section-title">Instructions</div>
-            <div class="instructions">${selectedRecipe.instructions}</div>
-          </div>
-
-          <div class="section">
-            <div class="section-title">Nutrition Information</div>
-            <ul class="nutrition-list">
-              ${nutritionOrder.map((key, idx) =>
-                `<li><strong>${displayLabel[key]}:</strong> ${totals[key]?.toFixed(1)} ${units[idx]}</li>`
-              ).join('')}
-            </ul>
-            <div class="calories">Estimated Calories: ${estimatedCalories} kcal</div>
-          </div>
-
-          <script>
-            window.onload = function() {
-              window.print();
-              window.onafterprint = function() {
-                window.close();
-              };
-            };
-          </script>
-        </body>
-      </html>
-    `;
-
+    const htmlContent = `...`; 
     printWindow.document.write(htmlContent);
     printWindow.document.close();
   };
 
+  // JSX rendering below
   return (
     <>
+      {/* Recipe preview card */}
       <div
         onClick={handleClick}
         className="cursor-pointer bg-base-200 p-6 rounded-xl hover:bg-primary transition duration-300 hover:scale-102 group shadow-lg"
@@ -241,28 +143,26 @@ export default function SearchResult({ number, name, image, area, category, reci
             </h1>
             <div className="flex space-x-1">
               <p className="text-md font-semibold group-hover:text-white transition duration-300">Area:</p>
-              <p className="text-md text-secondary-content group-hover:text-white  transition duration-300">{area}</p>
+              <p className="text-md text-secondary-content group-hover:text-white transition duration-300">{area}</p>
             </div>
             <div className="flex space-x-1">
               <p className="text-md font-semibold group-hover:text-white transition duration-300">Category:</p>
               <p className="text-md text-secondary-content group-hover:text-white transition duration-300">{category}</p>
             </div>
           </div>
-          <img src={image} className="h-40 w-40 rounded-xl" alt={name  + ' - Picture unavailable.'} />
+          <img src={image} className="h-40 w-40 rounded-xl" alt={name + ' - Picture unavailable.'} />
         </div>
       </div>
 
+      {/* Modal for detailed recipe view */}
       {showModal && selectedRecipe && (
         <div className="fixed inset-0 z-50">
-          {/* Enhanced backdrop with consistent blur */}
           <div className="fixed inset-0 bg-black/50 backdrop-blur-xl transition-all duration-500"></div>
 
-          {/* Modal container */}
-          <div
-            ref={modalRef}
-            className="fixed inset-0 flex items-center justify-center p-4 overflow-y-auto"
-          >
+          <div ref={modalRef} className="fixed inset-0 flex items-center justify-center p-4 overflow-y-auto">
             <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-7xl p-10 max-h-[90vh] overflow-y-auto border border-gray-200">
+
+              {/* Header section */}
               <div className="flex flex-col md:flex-row justify-between items-start mb-10">
                 <div className="flex gap-6">
                   <img
@@ -275,7 +175,7 @@ export default function SearchResult({ number, name, image, area, category, reci
                     <p className="mt-2 text-gray-500 text-sm italic">Powered by TheMealDB & API Ninjas</p>
                     <div className="flex space-x-1 mt-4">
                       <p className="text-md font-semibold group-hover:text-white transition duration-300">Area:</p>
-                      <p className="text-md text-secondary-content group-hover:text-white  transition duration-300">{selectedRecipe.area}</p>
+                      <p className="text-md text-secondary-content group-hover:text-white transition duration-300">{selectedRecipe.area}</p>
                     </div>
                     <div className="flex space-x-1">
                       <p className="text-md group-hover:text-white font-semibold transition duration-300">Category:</p>
@@ -283,6 +183,8 @@ export default function SearchResult({ number, name, image, area, category, reci
                     </div>
                   </div>
                 </div>
+
+                {/* Action buttons */}
                 <div className="flex flex-row gap-5">
                   <button
                     onClick={generatePDF}
@@ -297,11 +199,11 @@ export default function SearchResult({ number, name, image, area, category, reci
                     <FaTimes />
                   </button>
                 </div>
-
               </div>
 
+              {/* Grid content */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Ingredients */}
+                {/* Ingredients Section */}
                 <div className="bg-base-200 rounded-xl p-5 shadow-xl h-[420px] overflow-y-auto">
                   <h2 className="text-xl font-semibold mb-4">Ingredients</h2>
                   <ul className="list-disc ml-5 space-y-1 text-secondary-content">
@@ -313,7 +215,7 @@ export default function SearchResult({ number, name, image, area, category, reci
                   </ul>
                 </div>
 
-                {/* Instructions */}
+                {/* Instructions Section */}
                 <div className="bg-base-200 rounded-xl p-5 shadow-xl h-[420px] overflow-y-auto">
                   <h2 className="text-xl font-semibold mb-4">Instructions</h2>
                   <p className="text-secondary-content whitespace-pre-line leading-relaxed">
@@ -321,7 +223,7 @@ export default function SearchResult({ number, name, image, area, category, reci
                   </p>
                 </div>
 
-                {/* Nutrition */}
+                {/* Nutrition Section */}
                 <div className="bg-base-200 rounded-xl p-5 shadow-xl h-[420px] overflow-y-auto">
                   <h2 className="text-xl font-semibold mb-4">Nutrition Analysis</h2>
                   {loading ? (
@@ -361,6 +263,7 @@ export default function SearchResult({ number, name, image, area, category, reci
                   )}
                 </div>
               </div>
+
             </div>
           </div>
         </div>

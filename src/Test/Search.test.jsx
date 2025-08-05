@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import Search from '../pages/Search';
 import { vi, describe, test, afterEach, expect } from 'vitest';
 
-// --- MOCKING CHILD COMPONENTS ---
+
 // These mocks remain the same as they correctly simulate user interaction.
 vi.mock('../components/Search/SearchTopic', () => ({
   __esModule: true,
@@ -25,7 +25,7 @@ vi.mock('../components/Search/SearchResult', () => ({
   ),
 }));
 
-// --- TEST SUITE ---
+
 describe('Search component', () => {
   // This is the fake data that will be returned by our mocked API call.
   // It's structured to match the API Ninjas response format, which the component uses for 'name' searches.
@@ -88,7 +88,7 @@ describe('Search component', () => {
     );
   });
 
-  // --- TEST CASE 3: FETCH FAILURE (NETWORK ERROR) ---
+  
   test('shows an error message when the fetch call fails', async () => {
     // Here, we simulate a network error by having the fetch promise reject.
     vi.spyOn(global, 'fetch').mockRejectedValue(new Error('Network failure'));
