@@ -123,7 +123,136 @@ export default function SearchResult({ number, name, image, area, category, reci
    */
   const generatePDF = () => {
     const printWindow = window.open('', '_blank');
-    const htmlContent = `...`;
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>${selectedRecipe.name} - Recipe</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              max-width: 800px;
+              margin: 0 auto;
+              padding: 20px;
+              line-height: 1.6;
+              color: #333;
+            }
+            .header {
+              text-align: center;
+              border-bottom: 2px solid #333;
+              padding-bottom: 20px;
+              margin-bottom: 30px;
+            }
+            .recipe-image {
+              width: 200px;
+              height: 200px;
+              object-fit: cover;
+              border-radius: 10px;
+              margin-bottom: 20px;
+              box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            .recipe-title {
+              font-size: 28px;
+              font-weight: bold;
+              margin-bottom: 10px;
+            }
+            .recipe-meta {
+              font-size: 16px;
+              color: #666;
+              margin: 5px 0;
+            }
+            .section {
+              margin-bottom: 30px;
+              page-break-inside: avoid;
+            }
+            .section-title {
+              font-size: 20px;
+              font-weight: bold;
+              margin-bottom: 15px;
+              color: #2c3e50;
+              border-bottom: 1px solid #eee;
+              padding-bottom: 5px;
+            }
+            .ingredients-list {
+              list-style-type: disc;
+              padding-left: 20px;
+            }
+            .ingredients-list li {
+              margin-bottom: 8px;
+            }
+            .instructions {
+              white-space: pre-line;
+              line-height: 1.8;
+            }
+            .nutrition-list {
+              list-style-type: none;
+              padding-left: 0;
+            }
+            .nutrition-list li {
+              margin-bottom: 5px;
+              padding: 5px;
+              background-color: #f8f9fa;
+              border-radius: 3px;
+            }
+            .calories {
+              font-size: 18px;
+              font-weight: bold;
+              background-color: #e9a48dff;
+              padding: 10px;
+              border-radius: 5px;
+              text-align: left;
+              margin-top: 15px;
+            }
+            @media print {
+              body { margin: 0; }
+              .no-print { display: none; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <img src="${selectedRecipe.image}" alt="${selectedRecipe.name}" class="recipe-image" />
+            <div class="recipe-title">${selectedRecipe.name}</div>
+            <div class="recipe-meta">Cuisine: ${selectedRecipe.area}</div>
+            <div class="recipe-meta">Category: ${selectedRecipe.category}</div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">Ingredients</div>
+            <ul class="ingredients-list">
+              ${selectedRecipe.ingredients.map(ing =>
+                `<li><strong>${ing.name}</strong> — ${ing.measure}</li>`
+              ).join('')}
+            </ul>
+          </div>
+
+          <div class="section">
+            <div class="section-title">Instructions</div>
+            <div class="instructions">${selectedRecipe.instructions}</div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">Nutrition Information</div>
+            <ul class="nutrition-list">
+              ${nutritionOrder.map((key, idx) =>
+                `<li><strong>${displayLabel[key]}:</strong> ${totals[key]?.toFixed(1)} ${units[idx]}</li>`
+              ).join('')}
+            </ul>
+            <div class="calories">Estimated Calories: ${estimatedCalories} kcal</div>
+          </div>
+
+          <script>
+            window.onload = function() {
+              window.print();
+              window.onafterprint = function() {
+                window.close();
+              };
+            };
+          </script>
+        </body>
+      </html>
+    `;
+
     printWindow.document.write(htmlContent);
     printWindow.document.close();
   };
