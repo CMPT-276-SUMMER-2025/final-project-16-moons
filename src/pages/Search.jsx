@@ -296,7 +296,7 @@ export default function Search() {
 
                     {searchType === 'name' && (
                         <div className={`bg-base-200 p-6 rounded-xl shadow-lg transition ${isVisible ? 'opacity-100 translate-y-0 delay-500' : 'opacity-0 translate-y-10'}`}>
-                            <h1><span className="font-medium">Note: {" "}</span>Due to project and API constraints, this feature only returns one search result and is missing image, area, and category data.</h1>
+                            <h1><span className="font-medium">Note: {" "}</span>Due to project and API constraints, this feature only returns one search result and is missing image, cuisine, and category data.</h1>
                         </div>
                     )}
                 {/* handles error if API fails or user input is invalid */}
