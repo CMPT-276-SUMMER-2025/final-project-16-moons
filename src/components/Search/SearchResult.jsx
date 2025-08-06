@@ -142,7 +142,7 @@ export default function SearchResult({ number, name, image, area, category, reci
               {number}. {name}
             </h1>
             <div className="flex space-x-1">
-              <p className="text-md font-semibold group-hover:text-white transition duration-300">Area:</p>
+              <p className="text-md font-semibold group-hover:text-white transition duration-300">Cuisine:</p>
               <p className="text-md text-secondary-content group-hover:text-white transition duration-300">{area}</p>
             </div>
             <div className="flex space-x-1">
@@ -174,7 +174,7 @@ export default function SearchResult({ number, name, image, area, category, reci
                     <h1 className="text-3xl font-bold">{selectedRecipe.name}</h1>
                     <p className="mt-2 text-gray-500 text-sm italic">Powered by TheMealDB & API Ninjas</p>
                     <div className="flex space-x-1 mt-4">
-                      <p className="text-md font-semibold group-hover:text-white transition duration-300">Area:</p>
+                      <p className="text-md font-semibold group-hover:text-white transition duration-300">Cuisine:</p>
                       <p className="text-md text-secondary-content group-hover:text-white transition duration-300">{selectedRecipe.area}</p>
                     </div>
                     <div className="flex space-x-1">
