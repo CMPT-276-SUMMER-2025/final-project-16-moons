@@ -7,6 +7,7 @@ export default function Scanner() {
     const [nutritionData, setNutritionData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [APIError, setAPIError] = useState(false)
     const [isVisible, setIsVisible] = useState(false)
 
     const key = import.meta.env.VITE_API_NINJAS_KEY
@@ -38,9 +39,11 @@ export default function Scanner() {
                 // reset states on file upload
                 setNutritionData([])
                 setError('')
+                setAPIError(false)
             } catch (err) {
                 // catch any errors and reset states
                 setError(err.message);
+                setAPIError(false)
                 setImage(null);
                 setNutritionData([]);
                 e.target.value = '';
@@ -48,6 +51,7 @@ export default function Scanner() {
         } else {
             // if there's no file selected, reset the states just in case
             setError('');
+            setAPIError(false)
             setImage(null);
             setNutritionData([]);
             e.target.value = '';
@@ -57,6 +61,7 @@ export default function Scanner() {
     const handleAnalyse = async () => {
         setLoading(true);
         setError('');
+        setAPIError(false)
         setNutritionData([]);
 
         try {
@@ -102,7 +107,8 @@ export default function Scanner() {
             if (!nutrition.ok) {
                 const errorText = await nutrition.text();
                 console.error("Text to nutrition error:", nutrition.status, errorText);
-                throw new Error("Error: Couldn't analyze nutritionial data. Try an image with clearer text.");
+                setAPIError(true)
+                throw new Error();
             }
 
             const data = await nutrition.json();
@@ -305,9 +311,17 @@ export default function Scanner() {
                             <h1>Looks like you haven't clicked the button yet. Click it on the left!</h1>
                         </div>
                     )}
-                    {error && (
+                    {error && !APIError && (
                         <div className="bg-base-200 p-6 rounded-xl shadow-lg">
                             <h1 className="font-medium text-error">{error}</h1>
+                        </div>
+                    )}
+                    {APIError && (
+                        <div className="bg-base-200 p-6 rounded-xl shadow-lg">
+                            <p className="text-error font-medium">
+                                Error: API Ninja's text to nutrition endpoint may be down. Check the status at{" "}
+                                <a href="https://api-ninjas.com/api/nutrition" target="_blank" className="text-error underline">https://api-ninjas.com/api/nutrition.</a>
+                            </p>
                         </div>
                     )}
                     <div className={`bg-base-200 p-6 rounded-xl shadow-lg transition ${isVisible ? 'opacity-100 translate-y-0 delay-500' : 'opacity-0 translate-y-10'}`}>

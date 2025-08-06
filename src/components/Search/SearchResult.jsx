@@ -8,11 +8,11 @@ export default function SearchResult({ number, name, image, area, category, reci
 
   const { setSelectedRecipe, selectedRecipe } = useRecipe();
 
-  const [showModal, setShowModal] = useState(false);  
-  const [nutritionData, setNutritionData] = useState([]); 
-  const [error, setError] = useState(null); 
-  const [loading, setLoading] = useState(false); 
-  
+  const [showModal, setShowModal] = useState(false);
+  const [nutritionData, setNutritionData] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   const modalRef = useRef(null); // Reference for modal DOM element
 
   const key = import.meta.env.VITE_API_NINJAS_KEY; // API key for Nutrition API
@@ -69,7 +69,7 @@ export default function SearchResult({ number, name, image, area, category, reci
             return { ingredient: ing.name, data: data[0] };
           } catch (err) {
             console.error("Error: ", err.message);
-            setError("API Ninja's text to nutrition endpoint may be down. Try refreshing the page or check the status at https://api-ninjas.com/api/nutrition.");
+            setError("Error: API Ninja's text to nutrition endpoint may be down. Try refreshing the page or check the status at https://api-ninjas.com/api/nutrition.");
             return { ingredient: ing.name, data: null };
           }
         })
@@ -123,7 +123,7 @@ export default function SearchResult({ number, name, image, area, category, reci
    */
   const generatePDF = () => {
     const printWindow = window.open('', '_blank');
-    const htmlContent = `...`; 
+    const htmlContent = `...`;
     printWindow.document.write(htmlContent);
     printWindow.document.close();
   };
