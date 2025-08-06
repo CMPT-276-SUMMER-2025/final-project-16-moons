@@ -38,8 +38,10 @@ Recipedia is a recipe generator that enables users to search for recipes while p
 ## Instructions
 To deploy this project locally, please follow the instructions below.
 
-1. Clone the project repository from GitHub by running `git clone https://github.com/CMPT-276-SUMMER-2025/final-project-16-moons`.
-2. Open the project files with a VDE of your choice.
-3. Install all the required dependencies by entering `npm install` in your terminal, while in the project's root directory.
-4. Deploy the project locally by entering `npm run dev` in your terminal, while in the project's root directory.
-5. Have fun!
+1. Download the .env file provided from our Canvas submission.
+2. Clone the project repository from GitHub by running `git clone https://github.com/CMPT-276-SUMMER-2025/final-project-16-moons`.
+3. Open the project files with a VDE of your choice.
+4. Put the .env file in the root directory of the project.
+5. Install all the required dependencies by entering `npm install` in your terminal, while in the project's root directory.
+6. Deploy the project locally by entering `npm run dev` in your terminal, while in the project's root directory.
+7. Have fun!
