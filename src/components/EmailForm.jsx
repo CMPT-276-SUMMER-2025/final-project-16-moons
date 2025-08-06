@@ -74,6 +74,7 @@ export default function EmailForm() {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="input w-full rounded-full bg-base-200 shadow-lg"
+                        placeholder="Your Name"
                         required
                     />
                 </fieldset>
@@ -87,7 +88,9 @@ export default function EmailForm() {
                         name="from_email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="input w-full rounded-full bg-base-200 shadow-lg"
+                        pattern="[A-Za-z0-9.]+@[A-Za-z0-9]+\.[A-Za-z]+"
+                        className="input validator w-full rounded-full bg-base-200 shadow-lg"
+                        placeholder="example@mail.com"
                         required
                     />
                 </fieldset>
@@ -103,6 +106,7 @@ export default function EmailForm() {
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                     className="input w-full rounded-full bg-base-200 shadow-lg"
+                    placeholder="Your Subject"
                     required
                 />
             </fieldset>
@@ -117,12 +121,14 @@ export default function EmailForm() {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     className="textarea h-30 w-full overflow-y-auto rounded-2xl bg-base-200 shadow-lg"
+                    placeholder="Your Message"
                     required>
                 </textarea>
             </fieldset>
             <div className={`flex justify-center mb-15 transition ${isVisible ? 'opacity-100 translate-y-0 delay-1100' : 'opacity-0 translate-y-10'}`}>
                 <button
                     type="submit"
+                    disabled={!name || !email || !subject || !message}
                     className="btn btn-lg btn-primary w-[60%] text-xl rounded-full shadow-2xl text-white transition duration-300 hover:scale-105">
                     Send!
                 </button>
@@ -150,7 +156,7 @@ export default function EmailForm() {
                             d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
                         />
                     </svg>
-                    <span>Error: Your message was not sent, try again.</span>
+                    <span>Error: Message sent unsuccessfully. Try again.</span>
                 </div>
             )}
         </form>
